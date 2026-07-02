@@ -11,7 +11,6 @@
             box-sizing: border-box;
         }
 
-        
         :root {
             --primary: #00d4ff;
             --primary-dark: #0099cc;
@@ -127,29 +126,6 @@
 
         .nav-links a:hover {
             color: var(--primary);
-        }
-
-        .nav-main {
-            display: flex;
-            gap: 0.3rem;
-            align-items: center;
-        }
-        .nav-main a {
-            padding: 0.35rem 0.85rem;
-            border-radius: 7px;
-            font-size: 0.83rem;
-            font-weight: 500;
-            text-decoration: none;
-            color: var(--text-muted);
-            transition: all 0.2s;
-        }
-        .nav-main a:hover {
-            color: #fff;
-            background: rgba(0, 212, 255, 0.12);
-        }
-        .nav-main a.active {
-            color: #fff;
-            background: rgba(0, 212, 255, 0.18);
         }
 
         /* Hero Section */
@@ -642,7 +618,7 @@
 
     <!-- Navigation -->
     <nav>
-        <a href="index.html" class="nav-logo" style="text-decoration:none;">AI Agent SDK</a>
+        <div class="nav-logo">AI Agent SDK</div>
         <ul class="nav-links">
             <li><a href="#problems">行业痛点</a></li>
             <li><a href="#features">核心功能</a></li>
@@ -650,12 +626,6 @@
             <li><a href="#scenarios">应用场景</a></li>
             <li><a href="#highlights">技术亮点</a></li>
         </ul>
-        <div class="nav-main">
-            <a href="index.html">首页</a>
-            <a href="sql-tools-pc.html">SQLTools</a>
-            <a href="dbridge.html">DBridge</a>
-            <a href="ai-agent.html" class="active">AI Agent</a>
-        </div>
     </nav>
 
     <!-- Hero -->
