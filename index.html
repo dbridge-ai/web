@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="SQLTools - 一站式在线SQL处理平台，支持32种数据库方言互转、SQL格式化、Dump拆分合并、ER图生成、数据脱敏。在线SQL转换工具，支持MySQL PostgreSQL SQLite MSSQL互转">
+  <meta name="keywords" content="SQL转换,SQL格式化,SQL方言转换,在线SQL工具,MySQL转PostgreSQL,dump拆分,ER图,数据脱敏,sql online">
+  <meta property="og:title" content="SQLTools - 一站式在线SQL处理平台">
+  <meta property="og:description" content="32种数据库方言互转 · SQL格式化 · Dump拆分 · ER图生成 · 数据脱敏">
+  <meta property="og:type" content="website">
+  <title>SQLTools - 一站式在线SQL处理平台 | SQL转换 · 格式化 · Dump处理</title>
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+      color: #1E293B; background: #F8FAFC; line-height: 1.6;
+    }
+    .hero {
+      padding: 120px 24px 80px; text-align: center;
+      background: linear-gradient(135deg, #EEF2FF 0%, #E0E7FF 40%, #F0F9FF 100%);
+    }
+    .hero h1 {
+      font-size: 48px; font-weight: 800; margin-bottom: 16px;
+      background: linear-gradient(135deg, #4F46E5, #7C3AED);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .hero p { font-size: 18px; color: #64748B; max-width: 600px; margin: 0 auto 32px; }
+    .btn {
+      display: inline-block; padding: 16px 40px; border-radius: 12px;
+      font-size: 18px; font-weight: 600; text-decoration: none; transition: .2s;
+    }
+    .btn-primary { background: #4F46E5; color: #fff; }
+    .btn-primary:hover { background: #3730A3; }
+    .features {
+      max-width: 1100px; margin: 0 auto; padding: 80px 24px;
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px;
+    }
+    .feature {
+      background: #fff; border: 1px solid #E2E8F0; border-radius: 12px;
+      padding: 28px; transition: .2s;
+    }
+    .feature:hover { box-shadow: 0 4px 20px rgba(0,0,0,.08); transform: translateY(-2px); }
+    .feature h3 { font-size: 18px; margin-bottom: 8px; }
+    .feature p { font-size: 14px; color: #64748B; }
+    .footer {
+      text-align: center; padding: 32px 24px; background: #0F172A;
+      color: #94A3B8; font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+  <section class="hero">
+    <h1>SQL 处理从未如此简单高效</h1>
+    <p>一站式在线 SQL 工具平台，支持 <strong>32种数据库方言</strong> 互转、SQL格式化/验证/分析、Dump文件拆分合并、ER图生成、数据脱敏等强大功能。完全免费，无需注册。</p>
+    <a href="/app" class="btn btn-primary">🎯 立即免费使用</a>
+  </section>
+
+  <section class="features">
+    <div class="feature">
+      <h3>🔄 SQL方言互转</h3>
+      <p>支持32种数据库方言任意转换，自动检测源方言，MySQL↔PostgreSQL↔SQLite↔MSSQL完整互转</p>
+    </div>
+    <div class="feature">
+      <h3>✨ SQL格式化</h3>
+      <p>一键美化SQL语句，统一缩进与风格，支持所有主流数据库方言</p>
+    </div>
+    <div class="feature">
+      <h3>📦 Dump拆分合并</h3>
+      <p>流式处理超大dump文件，支持MySQL/PostgreSQL/SQLite/MSSQL格式</p>
+    </div>
+    <div class="feature">
+      <h3>🔒 数据脱敏</h3>
+      <p>NULL化/哈希/掩码/伪造数据等多种策略，保护敏感数据安全</p>
+    </div>
+    <div class="feature">
+      <h3>📈 ER图生成</h3>
+      <p>从dump文件自动生成交互式ER图，支持HTML/Mermaid/JSON多种格式</p>
+    </div>
+    <div class="feature">
+      <h3>✅ SQL验证</h3>
+      <p>精准语法检查与错误定位，支持严格模式，快速排查问题</p>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <p>基于 polyglot-sql &amp; sql-splitter 构建 · Rust + React 技术栈</p>
+    <p style="margin-top:4px;">&copy; 2026 SQLTools. All rights reserved.</p>
+  </footer>
+</body>
+</html>
