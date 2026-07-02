@@ -13,7 +13,6 @@
             box-sizing: border-box;
         }
 
-        
         :root {
             --primary: #4F46E5;
             --primary-dark: #3730A3;
@@ -140,29 +139,6 @@
         .nav-cta:hover {
             transform: translateY(-2px);
             box-shadow: var(--glow);
-        }
-
-        .nav-main {
-            display: flex;
-            gap: 0.3rem;
-            align-items: center;
-        }
-        .nav-main a {
-            padding: 0.35rem 0.85rem;
-            border-radius: 7px;
-            font-size: 0.83rem;
-            font-weight: 500;
-            text-decoration: none;
-            color: var(--text-muted);
-            transition: all 0.2s;
-        }
-        .nav-main a:hover {
-            color: #fff;
-            background: rgba(79, 70, 229, 0.12);
-        }
-        .nav-main a.active {
-            color: #fff;
-            background: rgba(79, 70, 229, 0.2);
         }
 
         /* Hero */
@@ -653,7 +629,7 @@
 
     <!-- Navigation -->
     <nav id="nav">
-        <a href="index.html" class="nav-logo">
+        <a href="#" class="nav-logo">
             <div class="nav-logo-icon">D</div>
             DBridge
         </a>
@@ -663,13 +639,8 @@
             <li><a href="#architecture">系统架构</a></li>
             <li><a href="#sync">同步场景</a></li>
             <li><a href="#security">安全保障</a></li>
+            <li><a href="#highlights" class="nav-cta">立即体验</a></li>
         </ul>
-        <div class="nav-main">
-            <a href="index.html">首页</a>
-            <a href="sql-tools-pc.html">SQLTools</a>
-            <a href="dbridge.html" class="active">DBridge</a>
-            <a href="ai-agent.html">AI Agent</a>
-        </div>
     </nav>
 
     <!-- Hero -->
