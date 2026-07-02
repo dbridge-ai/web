@@ -76,6 +76,15 @@
     }
     .nav-links a:hover { color: var(--primary-light); }
 
+    .nav-main { display: flex; gap: .3rem; align-items: center; }
+    .nav-main a {
+      padding: .35rem .85rem; border-radius: 7px;
+      font-size: .83rem; font-weight: 500; text-decoration: none;
+      color: var(--text-muted); transition: all .2s;
+    }
+    .nav-main a:hover { color: #fff; background: rgba(79,70,229,.15); }
+    .nav-main a.active { color: #fff; background: rgba(79,70,229,.2); }
+
     /* ── Hero ── */
     .hero {
       padding: 140px 2rem 100px; text-align: center; position: relative;
@@ -333,10 +342,13 @@
     <li><a href="#products">产品矩阵</a></li>
     <li><a href="#compare">功能对比</a></li>
     <li><a href="#scenarios">应用场景</a></li>
-    <li><a href="sql-tools-pc.html">SQLTools</a></li>
-    <li><a href="dbridge.html">DBridge</a></li>
-    <li><a href="ai-agent.html">AI Agent</a></li>
   </ul>
+  <div class="nav-main">
+    <a href="index.html" class="active">首页</a>
+    <a href="sql-tools-pc.html">SQLTools</a>
+    <a href="dbridge.html">DBridge</a>
+    <a href="ai-agent.html">AI Agent</a>
+  </div>
 </nav>
 
 <!-- ════════ Hero ════════ -->

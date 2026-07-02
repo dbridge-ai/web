@@ -67,6 +67,15 @@
     }
     .nav-cta:hover { background: var(--primary-dark); transform: translateY(-1px); }
 
+    .nav-main { display: flex; gap: 4px; align-items: center; margin-left: 8px; padding-left: 20px; border-left: 1px solid var(--border); }
+    .nav-main a {
+      padding: 6px 14px; border-radius: 7px;
+      font-size: 13px; font-weight: 500; text-decoration: none;
+      color: var(--text-light); transition: all .2s;
+    }
+    .nav-main a:hover { color: var(--primary); background: #EEF2FF; }
+    .nav-main a.active { color: var(--primary); background: #EEF2FF; font-weight: 600; }
+
     /* ── Hero ── */
     .hero {
       padding: 160px 48px 100px;
@@ -330,11 +339,14 @@
     SQLTools
   </a>
   <div class="nav-links">
-    <a href="index.html">🏠 首页</a>
     <a href="#features">核心功能</a>
     <a href="#dialects">支持方言</a>
     <a href="#how">如何使用</a>
     <a href="#demo">示例</a>
+  </div>
+  <div class="nav-main">
+    <a href="index.html">首页</a>
+    <a href="sql-tools-pc.html" class="active">SQLTools</a>
     <a href="dbridge.html">DBridge</a>
     <a href="ai-agent.html">AI Agent</a>
   </div>
