@@ -3,12 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="SQLTools - 一站式在线SQL处理平台，支持32种数据库方言互转、SQL格式化、Dump拆分合并、ER图生成、数据脱敏。在线SQL转换工具，支持MySQL PostgreSQL SQLite MSSQL互转">
-  <meta name="keywords" content="SQL转换,SQL格式化,SQL方言转换,在线SQL工具,MySQL转PostgreSQL,dump拆分,ER图,数据脱敏,sql online">
-  <meta property="og:title" content="SQLTools - 一站式在线SQL处理平台">
-  <meta property="og:description" content="32种数据库方言互转 · SQL格式化 · Dump拆分 · ER图生成 · 数据脱敏">
-  <meta property="og:type" content="website">
-  <title>SQLTools - 一站式在线SQL处理平台 | SQL转换 · 格式化 · Dump处理</title>
+  <meta name="description" content="企业级数据库管理与AI开发工具集 — SQLTools在线SQL处理 · DBridge跨库同步 · AI Agent智能SDK，一站式数据技术产品矩阵">
+  <title>好么好物</title>
   <style>
     * { margin:0; padding:0; box-sizing:border-box; }
     body {
@@ -80,7 +76,70 @@
       <h3>✅ SQL验证</h3>
       <p>精准语法检查与错误定位，支持严格模式，快速排查问题</p>
     </div>
-  </section>
+    <div class="scenario-card">
+      <div class="scenario-icon">🔒</div>
+      <h4>数据安全合规</h4>
+      <p><strong style="color:#818CF8">SQLTools</strong> 数据脱敏 + <strong style="color:#67E8F9">DBridge</strong> 审计日志，构建完整数据安全防线</p>
+    </div>
+    <div class="scenario-card">
+      <div class="scenario-icon">📊</div>
+      <h4>多环境结构治理</h4>
+      <p>用 <strong style="color:#67E8F9">DBridge</strong> 对比开发/测试/生产数据库结构，自动化 DDL 同步</p>
+    </div>
+    <div class="scenario-card">
+      <div class="scenario-icon">🏥</div>
+      <h4>智慧医疗场景</h4>
+      <p><strong style="color:#00d4ff">AI Agent</strong> 对接 HIS 系统，AI 辅助问诊 + <strong style="color:#67E8F9">DBridge</strong> 跨院数据同步</p>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ CTA ════════ -->
+<section class="cta fade-in" id="cta">
+  <h2>选择适合你的产品</h2>
+  <p>每款产品独立可用，也可组合形成完整数据技术链路</p>
+  <div class="cta-buttons">
+    <a href="sql-tools-pc.html" class="btn btn-primary">🧩 SQLTools · 在线SQL处理</a>
+    <a href="dbridge.html" class="btn btn-cyan">🗄️ DBridge · 数据库同步管理</a>
+    <a href="ai-agent.html" class="btn btn-sky">🤖 AI Agent · 智能升级SDK</a>
+  </div>
+</section>
+
+<!-- ════════ Footer ════════ -->
+<footer>
+  <div class="footer-links">
+    <a href="sql-tools-pc.html">SQLTools</a>
+    <a href="dbridge.html">DBridge</a>
+    <a href="ai-agent.html">AI Agent SDK</a>
+    <a href="#products">产品矩阵</a>
+    <a href="#compare">功能对比</a>
+    <a href="#scenarios">应用场景</a>
+  </div>
+  <p>数智工坊 DataForge &copy; 2024-2026 | Rust · Go · Java · React 技术栈</p>
+  <p style="margin-top:4px;font-size:11px;">SQL 处理 · 数据库同步 · AI 开发 — 一站式企业数据技术平台</p>
+  <p style="margin-top:8px;font-size:11px;"><a href="https://beian.miit.gov.cn" target="_blank" rel="nofollow" style="color:var(--text-muted);text-decoration:none;">浙ICP备2023046364号-1</a></p>
+</footer>
+
+<script>
+  // Nav shadow on scroll
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 10));
+
+  // Smooth scroll
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      const t = document.querySelector(a.getAttribute('href'));
+      if (t) t.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+
+  // Fade-in animations
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+</script>
 
   <footer class="footer">
     <p>基于 polyglot-sql &amp; sql-splitter 构建 · Rust + React 技术栈</p>
