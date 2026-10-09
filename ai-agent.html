@@ -1,0 +1,1085 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>好么好物</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        
+        :root {
+            --primary: #00d4ff;
+            --primary-dark: #0099cc;
+            --accent: #7c3aed;
+            --accent-light: #a78bfa;
+            --bg-dark: #0a0e1a;
+            --bg-card: rgba(15, 23, 42, 0.8);
+            --text: #e2e8f0;
+            --text-muted: #94a3b8;
+            --border: rgba(0, 212, 255, 0.2);
+            --glow: 0 0 20px rgba(0, 212, 255, 0.3);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text);
+            overflow-x: hidden;
+            line-height: 1.7;
+        }
+
+        /* Animated background */
+        .bg-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                linear-gradient(rgba(0, 212, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 212, 255, 0.03) 1px, transparent 1px);
+            background-size: 60px 60px;
+            z-index: -2;
+        }
+
+        .bg-gradient {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background:
+                radial-gradient(ellipse at 20% 50%, rgba(124, 58, 237, 0.1) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 20%, rgba(0, 212, 255, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 80%, rgba(124, 58, 237, 0.05) 0%, transparent 50%);
+            z-index: -1;
+        }
+
+        /* Floating particles */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: var(--primary);
+            border-radius: 50%;
+            animation: float linear infinite;
+            opacity: 0.4;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.4; }
+            90% { opacity: 0.4; }
+            100% { transform: translateY(-100px) rotate(720deg); opacity: 0; }
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 1rem 2rem;
+            background: rgba(10, 14, 26, 0.9);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-logo {
+            font-size: 1.4rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary), var(--accent-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .nav-main {
+            display: flex;
+            gap: 0.3rem;
+            align-items: center;
+        }
+        .nav-main a {
+            padding: 0.35rem 0.85rem;
+            border-radius: 7px;
+            font-size: 0.83rem;
+            font-weight: 500;
+            text-decoration: none;
+            color: var(--text-muted);
+            transition: all 0.2s;
+        }
+        .nav-main a:hover {
+            color: #fff;
+            background: rgba(0, 212, 255, 0.12);
+        }
+        .nav-main a.active {
+            color: #fff;
+            background: rgba(0, 212, 255, 0.18);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 6rem 2rem 4rem;
+            position: relative;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1.2rem;
+            border: 1px solid var(--border);
+            border-radius: 100px;
+            font-size: 0.85rem;
+            color: var(--primary);
+            margin-bottom: 2rem;
+            background: rgba(0, 212, 255, 0.05);
+        }
+
+        .hero-badge::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background: var(--primary);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.5); }
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #ffffff 0%, var(--primary) 50%, var(--accent-light) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            max-width: 700px;
+            margin-bottom: 3rem;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 0.8rem 2rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: #fff;
+            box-shadow: var(--glow);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 40px rgba(0, 212, 255, 0.5);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--primary);
+            border: 1px solid var(--primary);
+        }
+
+        .btn-outline:hover {
+            background: rgba(0, 212, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        /* Sections */
+        section {
+            padding: 6rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-header h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #ffffff, var(--primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .section-header p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Pain Points */
+        .pain-points {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .pain-card {
+            background: var(--bg-card);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            border-radius: 16px;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s, border-color 0.3s;
+        }
+
+        .pain-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(239, 68, 68, 0.4);
+        }
+
+        .pain-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, #ef4444, #f97316);
+        }
+
+        .pain-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .pain-card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 0.8rem;
+            color: #fca5a5;
+        }
+
+        .pain-card p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        /* Trend Section */
+        .trend-section {
+            position: relative;
+        }
+
+        .trend-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .trend-text h3 {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            color: #fff;
+        }
+
+        .trend-text p {
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+            font-size: 1.05rem;
+        }
+
+        .trend-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 1.5rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary), var(--accent-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 0.3rem;
+        }
+
+        /* Features */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .feature-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2rem;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-4px);
+            box-shadow: var(--glow);
+        }
+
+        .feature-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.02), rgba(124, 58, 237, 0.02));
+            pointer-events: none;
+        }
+
+        .feature-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.15), rgba(124, 58, 237, 0.15));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1.2rem;
+        }
+
+        .feature-card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 0.8rem;
+            color: #fff;
+        }
+
+        .feature-card p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        /* Architecture */
+        .architecture {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 3rem;
+            margin-top: 2rem;
+        }
+
+        .arch-diagram {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        .arch-svg {
+            width: 100%;
+            min-width: 800px;
+            height: auto;
+        }
+
+        /* Scenarios */
+        .scenarios-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .scenario-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .scenario-card:hover {
+            border-color: var(--accent-light);
+            transform: translateY(-4px);
+        }
+
+        .scenario-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .scenario-card h3 {
+            font-size: 1.1rem;
+            margin-bottom: 0.6rem;
+            color: #fff;
+        }
+
+        .scenario-card p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* Highlights */
+        .highlights {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 3rem;
+        }
+
+        .highlight-item {
+            text-align: center;
+            padding: 2rem 1rem;
+            border-radius: 16px;
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.05), rgba(124, 58, 237, 0.05));
+            border: 1px solid var(--border);
+            transition: all 0.3s;
+        }
+
+        .highlight-item:hover {
+            border-color: var(--primary);
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(124, 58, 237, 0.1));
+        }
+
+        .highlight-icon {
+            font-size: 2rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .highlight-item h4 {
+            font-size: 1rem;
+            margin-bottom: 0.4rem;
+            color: #fff;
+        }
+
+        .highlight-item p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        /* Tech Stack */
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        .tech-tag {
+            padding: 0.6rem 1.2rem;
+            border-radius: 100px;
+            background: rgba(0, 212, 255, 0.08);
+            border: 1px solid var(--border);
+            font-size: 0.9rem;
+            color: var(--primary);
+            transition: all 0.3s;
+        }
+
+        .tech-tag:hover {
+            background: rgba(0, 212, 255, 0.15);
+            border-color: var(--primary);
+        }
+
+        /* CTA */
+        .cta-section {
+            text-align: center;
+            padding: 6rem 2rem;
+            position: relative;
+        }
+
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(0, 212, 255, 0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .cta-section h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: #fff;
+        }
+
+        .cta-section p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+        }
+
+        /* Footer */
+        footer {
+            border-top: 1px solid var(--border);
+            padding: 2rem;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        /* Animations */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .trend-content { grid-template-columns: 1fr; gap: 2rem; }
+            .architecture { padding: 1.5rem; }
+            section { padding: 4rem 1.5rem; }
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-dark);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(0, 212, 255, 0.3);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(0, 212, 255, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-grid"></div>
+    <div class="bg-gradient"></div>
+    <div class="particles" id="particles"></div>
+
+    <!-- Navigation -->
+    <nav>
+        <a href="index.html" class="nav-logo" style="text-decoration:none;">AI Agent SDK</a>
+        <ul class="nav-links">
+            <li><a href="#problems">行业痛点</a></li>
+            <li><a href="#features">核心功能</a></li>
+            <li><a href="#architecture">架构设计</a></li>
+            <li><a href="#scenarios">应用场景</a></li>
+            <li><a href="#highlights">技术亮点</a></li>
+        </ul>
+        <div class="nav-main">
+            <a href="index.html">首页</a>
+            <a href="sql-tools-pc.html">SQLTools</a>
+            <a href="dbridge.html">DBridge</a>
+            <a href="ai-agent.html" class="active">AI Agent</a>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="hero-badge">Spring Boot 3.x + Spring AI Alibaba + MCP</div>
+        <h1>让传统系统<br>拥抱AI智能时代</h1>
+        <p>企业级 AI Agent Java SDK —— 基于 MCP 协议，为传统信息化系统提供零侵入式 AI 能力接入，支持多 Agent 协作、分层记忆、自我进化，一站式完成智能化升级。</p>
+        <div class="hero-buttons">
+            <a href="#architecture" class="btn btn-primary">查看架构</a>
+            <a href="#features" class="btn btn-outline">了解更多</a>
+        </div>
+    </section>
+
+    <!-- Pain Points -->
+    <section id="problems" class="fade-in">
+        <div class="section-header">
+            <h2>传统系统面临的AI困境</h2>
+            <p>在AI浪潮下，传统信息化系统正面临前所未有的挑战</p>
+        </div>
+        <div class="pain-points">
+            <div class="pain-card">
+                <div class="pain-icon">🔒</div>
+                <h3>系统封闭，难以对接</h3>
+                <p>传统系统采用封闭架构，缺乏标准化的AI接入接口。对接大模型需要大量定制开发，成本高、周期长、风险大。</p>
+            </div>
+            <div class="pain-card">
+                <div class="pain-icon">🧩</div>
+                <h3>数据孤岛，智能割裂</h3>
+                <p>各业务系统间数据不互通，AI无法获取完整上下文。用户在不同平台的身份割裂，无法提供连贯的智能服务体验。</p>
+            </div>
+            <div class="pain-card">
+                <div class="pain-icon">⚠️</div>
+                <h3>安全合规，难以保障</h3>
+                <p>AI直接访问核心系统存在安全隐患，数据隔离、权限控制、审计追溯等企业级需求难以在现有架构上实现。</p>
+            </div>
+            <div class="pain-card">
+                <div class="pain-icon">🐌</div>
+                <h3>缺乏记忆，重复劳动</h3>
+                <p>传统对话式AI无状态，每次交互从零开始。无法积累经验和知识，不能随着使用而进步，效率始终停滞不前。</p>
+            </div>
+            <div class="pain-card">
+                <div class="pain-icon">🏗️</div>
+                <h3>技术栈不匹配</h3>
+                <p>主流AI框架以Python为主，与企业Java技术栈存在天然鸿沟。团队学习成本高，维护困难，无法复用已有基础设施。</p>
+            </div>
+            <div class="pain-card">
+                <div class="pain-icon">📈</div>
+                <h3>扩展性差，难以规模化</h3>
+                <p>单Agent架构无法应对复杂业务场景。缺乏多租户支持，难以为不同业务线提供差异化的AI服务能力。</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Trend -->
+    <section class="trend-section fade-in">
+        <div class="trend-content">
+            <div class="trend-text">
+                <h3>AI赋能，是未来的必然趋势</h3>
+                <p>Gartner预测，到2026年超过80%的企业将在生产环境中使用AI Agent。传统信息化系统的智能化升级已不是"要不要做"的问题，而是"如何快速做好"的问题。</p>
+                <p>MCP（Model Context Protocol）协议的出现，为AI与传统系统的对接提供了标准化方案。通过MCP，AI Agent可以安全、高效地调用传统系统的能力，而无需改造原有系统。</p>
+                <p>我们的SDK正是为此而生——<strong style="color: var(--primary);">让Java技术栈的传统系统，以最低成本、最小改动，获得最强大的AI能力。</strong></p>
+            </div>
+            <div class="trend-stats">
+                <div class="stat-item">
+                    <div class="stat-number">80%+</div>
+                    <div class="stat-label">企业将采用AI Agent</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">5x</div>
+                    <div class="stat-label">效率提升倍数</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">零侵入</div>
+                    <div class="stat-label">无需改造原系统</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">MCP</div>
+                    <div class="stat-label">标准化协议对接</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features -->
+    <section id="features" class="fade-in">
+        <div class="section-header">
+            <h2>核心功能</h2>
+            <p>为企业AI应用提供全方位的基础设施能力</p>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🧠</div>
+                <h3>五级分层记忆系统</h3>
+                <p>L0 元规则 → L1 洞察索引 → L2 全局事实 → L3 技能库 → L4 会话档案。从瞬时到永久，构建完整的Agent认知体系，越用越聪明。</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔄</div>
+                <h3>自我进化机制</h3>
+                <p>Agent在完成任务后自动总结经验，生成可复用的技能脚本。下次遇到相似问题时直接调用，实现能力的自主积累与进化。</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🤖</div>
+                <h3>多Agent协作架构</h3>
+                <p>支持创建多个专职Agent（如医疗助手、运维助手、客服助手），各司其职，独立配置模型、工具和记忆，灵活应对复杂业务。</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔗</div>
+                <h3>MCP协议标准对接</h3>
+                <p>通过MCP Server暴露传统系统能力为标准化工具。AI Agent按需调用，支持工具级别的细粒度权限控制，安全可控。</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">👥</div>
+                <h3>统一用户映射</h3>
+                <p>跨平台用户身份统一（企业微信、钉钉、飞书、微信、HIS系统），无论用户从哪个入口进入，AI都能识别并提供连贯服务。</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🛡️</div>
+                <h3>企业级安全隔离</h3>
+                <p>用户级数据隔离、JWT认证鉴权、MCP工具权限管控。确保AI在赋能业务的同时，不突破安全边界，满足合规要求。</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Architecture -->
+    <section id="architecture" class="fade-in">
+        <div class="section-header">
+            <h2>对接传统系统架构</h2>
+            <p>通过MCP协议桥接AI能力与传统系统，实现零侵入式智能化升级</p>
+        </div>
+        <div class="architecture">
+            <div class="arch-diagram">
+                <svg class="arch-svg" viewBox="0 0 1000 620" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Background layers -->
+                    <!-- User Layer -->
+                    <rect x="20" y="20" width="960" height="80" rx="12" fill="rgba(0,212,255,0.05)" stroke="rgba(0,212,255,0.3)" stroke-width="1"/>
+                    <text x="50" y="45" fill="#00d4ff" font-size="12" font-weight="bold">用户接入层</text>
+
+                    <rect x="60" y="55" width="120" height="35" rx="6" fill="rgba(0,212,255,0.1)" stroke="rgba(0,212,255,0.4)" stroke-width="1"/>
+                    <text x="120" y="77" fill="#e2e8f0" font-size="11" text-anchor="middle">企业微信</text>
+
+                    <rect x="200" y="55" width="120" height="35" rx="6" fill="rgba(0,212,255,0.1)" stroke="rgba(0,212,255,0.4)" stroke-width="1"/>
+                    <text x="260" y="77" fill="#e2e8f0" font-size="11" text-anchor="middle">钉钉</text>
+
+                    <rect x="340" y="55" width="120" height="35" rx="6" fill="rgba(0,212,255,0.1)" stroke="rgba(0,212,255,0.4)" stroke-width="1"/>
+                    <text x="400" y="77" fill="#e2e8f0" font-size="11" text-anchor="middle">飞书</text>
+
+                    <rect x="480" y="55" width="120" height="35" rx="6" fill="rgba(0,212,255,0.1)" stroke="rgba(0,212,255,0.4)" stroke-width="1"/>
+                    <text x="540" y="77" fill="#e2e8f0" font-size="11" text-anchor="middle">微信公众号</text>
+
+                    <rect x="620" y="55" width="120" height="35" rx="6" fill="rgba(0,212,255,0.1)" stroke="rgba(0,212,255,0.4)" stroke-width="1"/>
+                    <text x="680" y="77" fill="#e2e8f0" font-size="11" text-anchor="middle">Web前端</text>
+
+                    <rect x="760" y="55" width="120" height="35" rx="6" fill="rgba(0,212,255,0.1)" stroke="rgba(0,212,255,0.4)" stroke-width="1"/>
+                    <text x="820" y="77" fill="#e2e8f0" font-size="11" text-anchor="middle">API调用</text>
+
+                    <!-- Arrow down -->
+                    <path d="M500 100 L500 130" stroke="rgba(0,212,255,0.5)" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+                    <!-- AI Agent Core -->
+                    <rect x="20" y="130" width="960" height="200" rx="12" fill="rgba(124,58,237,0.05)" stroke="rgba(124,58,237,0.3)" stroke-width="1"/>
+                    <text x="50" y="155" fill="#a78bfa" font-size="12" font-weight="bold">AI Agent 服务层 (Spring Boot + Spring AI Alibaba)</text>
+
+                    <!-- Sub modules -->
+                    <rect x="50" y="170" width="200" height="60" rx="8" fill="rgba(124,58,237,0.1)" stroke="rgba(124,58,237,0.4)" stroke-width="1"/>
+                    <text x="150" y="195" fill="#e2e8f0" font-size="11" text-anchor="middle" font-weight="bold">Agent Loop</text>
+                    <text x="150" y="215" fill="#94a3b8" font-size="10" text-anchor="middle">推理 → 行动 → 观察循环</text>
+
+                    <rect x="270" y="170" width="200" height="60" rx="8" fill="rgba(124,58,237,0.1)" stroke="rgba(124,58,237,0.4)" stroke-width="1"/>
+                    <text x="370" y="195" fill="#e2e8f0" font-size="11" text-anchor="middle" font-weight="bold">Memory Manager</text>
+                    <text x="370" y="215" fill="#94a3b8" font-size="10" text-anchor="middle">L0-L4 五级分层记忆</text>
+
+                    <rect x="490" y="170" width="200" height="60" rx="8" fill="rgba(124,58,237,0.1)" stroke="rgba(124,58,237,0.4)" stroke-width="1"/>
+                    <text x="590" y="195" fill="#e2e8f0" font-size="11" text-anchor="middle" font-weight="bold">Skill Store</text>
+                    <text x="590" y="215" fill="#94a3b8" font-size="10" text-anchor="middle">自我进化 / 技能积累</text>
+
+                    <rect x="710" y="170" width="230" height="60" rx="8" fill="rgba(124,58,237,0.1)" stroke="rgba(124,58,237,0.4)" stroke-width="1"/>
+                    <text x="825" y="195" fill="#e2e8f0" font-size="11" text-anchor="middle" font-weight="bold">User Mapping</text>
+                    <text x="825" y="215" fill="#94a3b8" font-size="10" text-anchor="middle">跨平台统一身份</text>
+
+                    <!-- Multi-Agent -->
+                    <rect x="50" y="250" width="890" height="60" rx="8" fill="rgba(124,58,237,0.08)" stroke="rgba(124,58,237,0.3)" stroke-width="1" stroke-dasharray="4"/>
+                    <text x="80" y="275" fill="#a78bfa" font-size="11" font-weight="bold">多Agent实例</text>
+                    <rect x="200" y="260" width="130" height="35" rx="6" fill="rgba(0,212,255,0.08)" stroke="rgba(0,212,255,0.3)" stroke-width="1"/>
+                    <text x="265" y="282" fill="#e2e8f0" font-size="10" text-anchor="middle">医疗助手 Agent</text>
+                    <rect x="350" y="260" width="130" height="35" rx="6" fill="rgba(0,212,255,0.08)" stroke="rgba(0,212,255,0.3)" stroke-width="1"/>
+                    <text x="415" y="282" fill="#e2e8f0" font-size="10" text-anchor="middle">运维助手 Agent</text>
+                    <rect x="500" y="260" width="130" height="35" rx="6" fill="rgba(0,212,255,0.08)" stroke="rgba(0,212,255,0.3)" stroke-width="1"/>
+                    <text x="565" y="282" fill="#e2e8f0" font-size="10" text-anchor="middle">客服助手 Agent</text>
+                    <rect x="650" y="260" width="130" height="35" rx="6" fill="rgba(0,212,255,0.08)" stroke="rgba(0,212,255,0.3)" stroke-width="1"/>
+                    <text x="715" y="282" fill="#e2e8f0" font-size="10" text-anchor="middle">数据分析 Agent</text>
+                    <rect x="800" y="260" width="100" height="35" rx="6" fill="rgba(0,212,255,0.05)" stroke="rgba(0,212,255,0.2)" stroke-width="1" stroke-dasharray="3"/>
+                    <text x="850" y="282" fill="#94a3b8" font-size="10" text-anchor="middle">更多...</text>
+
+                    <!-- Arrow down to MCP -->
+                    <path d="M500 330 L500 360" stroke="rgba(0,212,255,0.5)" stroke-width="2" marker-end="url(#arrowhead)"/>
+                    <text x="515" y="350" fill="#00d4ff" font-size="10">MCP 协议</text>
+
+                    <!-- MCP Layer -->
+                    <rect x="20" y="360" width="960" height="80" rx="12" fill="rgba(16,185,129,0.05)" stroke="rgba(16,185,129,0.3)" stroke-width="1"/>
+                    <text x="50" y="385" fill="#34d399" font-size="12" font-weight="bold">MCP Server 层 (标准化工具代理)</text>
+
+                    <rect x="60" y="395" width="150" height="35" rx="6" fill="rgba(16,185,129,0.1)" stroke="rgba(16,185,129,0.4)" stroke-width="1"/>
+                    <text x="135" y="417" fill="#e2e8f0" font-size="10" text-anchor="middle">HIS系统 MCP</text>
+
+                    <rect x="230" y="395" width="150" height="35" rx="6" fill="rgba(16,185,129,0.1)" stroke="rgba(16,185,129,0.4)" stroke-width="1"/>
+                    <text x="305" y="417" fill="#e2e8f0" font-size="10" text-anchor="middle">ERP系统 MCP</text>
+
+                    <rect x="400" y="395" width="150" height="35" rx="6" fill="rgba(16,185,129,0.1)" stroke="rgba(16,185,129,0.4)" stroke-width="1"/>
+                    <text x="475" y="417" fill="#e2e8f0" font-size="10" text-anchor="middle">OA系统 MCP</text>
+
+                    <rect x="570" y="395" width="150" height="35" rx="6" fill="rgba(16,185,129,0.1)" stroke="rgba(16,185,129,0.4)" stroke-width="1"/>
+                    <text x="645" y="417" fill="#e2e8f0" font-size="10" text-anchor="middle">CRM系统 MCP</text>
+
+                    <rect x="740" y="395" width="150" height="35" rx="6" fill="rgba(16,185,129,0.1)" stroke="rgba(16,185,129,0.4)" stroke-width="1"/>
+                    <text x="815" y="417" fill="#e2e8f0" font-size="10" text-anchor="middle">数据库 MCP</text>
+
+                    <!-- Arrow down -->
+                    <path d="M500 440 L500 470" stroke="rgba(16,185,129,0.5)" stroke-width="2" marker-end="url(#arrowhead-green)"/>
+                    <text x="515" y="460" fill="#34d399" font-size="10">REST / gRPC / JDBC</text>
+
+                    <!-- Traditional Systems -->
+                    <rect x="20" y="470" width="960" height="80" rx="12" fill="rgba(245,158,11,0.05)" stroke="rgba(245,158,11,0.3)" stroke-width="1"/>
+                    <text x="50" y="495" fill="#fbbf24" font-size="12" font-weight="bold">传统信息化系统 (无需任何改造)</text>
+
+                    <rect x="60" y="505" width="150" height="35" rx="6" fill="rgba(245,158,11,0.1)" stroke="rgba(245,158,11,0.4)" stroke-width="1"/>
+                    <text x="135" y="527" fill="#e2e8f0" font-size="10" text-anchor="middle">医院HIS系统</text>
+
+                    <rect x="230" y="505" width="150" height="35" rx="6" fill="rgba(245,158,11,0.1)" stroke="rgba(245,158,11,0.4)" stroke-width="1"/>
+                    <text x="305" y="527" fill="#e2e8f0" font-size="10" text-anchor="middle">企业ERP</text>
+
+                    <rect x="400" y="505" width="150" height="35" rx="6" fill="rgba(245,158,11,0.1)" stroke="rgba(245,158,11,0.4)" stroke-width="1"/>
+                    <text x="475" y="527" fill="#e2e8f0" font-size="10" text-anchor="middle">办公OA</text>
+
+                    <rect x="570" y="505" width="150" height="35" rx="6" fill="rgba(245,158,11,0.1)" stroke="rgba(245,158,11,0.4)" stroke-width="1"/>
+                    <text x="645" y="527" fill="#e2e8f0" font-size="10" text-anchor="middle">客户CRM</text>
+
+                    <rect x="740" y="505" width="150" height="35" rx="6" fill="rgba(245,158,11,0.1)" stroke="rgba(245,158,11,0.4)" stroke-width="1"/>
+                    <text x="815" y="527" fill="#e2e8f0" font-size="10" text-anchor="middle">MySQL / Oracle</text>
+
+                    <!-- Data Layer -->
+                    <rect x="20" y="565" width="960" height="45" rx="12" fill="rgba(99,102,241,0.05)" stroke="rgba(99,102,241,0.3)" stroke-width="1"/>
+                    <text x="50" y="593" fill="#818cf8" font-size="11" font-weight="bold">数据持久层</text>
+                    <text x="250" y="593" fill="#94a3b8" font-size="10">MySQL (生产)</text>
+                    <text x="420" y="593" fill="#94a3b8" font-size="10">HSQLDB (开发/测试)</text>
+                    <text x="620" y="593" fill="#94a3b8" font-size="10">Redis (缓存/会话)</text>
+                    <text x="810" y="593" fill="#94a3b8" font-size="10">Flyway (版本迁移)</text>
+
+                    <!-- Arrow markers -->
+                    <defs>
+                        <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+                            <polygon points="0 0, 10 3.5, 0 7" fill="rgba(0,212,255,0.5)"/>
+                        </marker>
+                        <marker id="arrowhead-green" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+                            <polygon points="0 0, 10 3.5, 0 7" fill="rgba(16,185,129,0.5)"/>
+                        </marker>
+                    </defs>
+                </svg>
+            </div>
+        </div>
+    </section>
+
+    <!-- Scenarios -->
+    <section id="scenarios" class="fade-in">
+        <div class="section-header">
+            <h2>应用场景</h2>
+            <p>覆盖多个行业，助力企业快速实现智能化转型</p>
+        </div>
+        <div class="scenarios-grid">
+            <div class="scenario-card">
+                <div class="scenario-icon">🏥</div>
+                <h3>智慧医疗</h3>
+                <p>对接HIS系统，AI辅助问诊、智能分诊、病历查询、用药提醒，让医生和患者都受益</p>
+            </div>
+            <div class="scenario-card">
+                <div class="scenario-icon">🏢</div>
+                <h3>企业办公</h3>
+                <p>连接OA/ERP系统，智能审批、日程管理、报表生成、知识库问答，提升办公效率</p>
+            </div>
+            <div class="scenario-card">
+                <div class="scenario-icon">🛠️</div>
+                <h3>IT运维</h3>
+                <p>对接监控告警系统，自动故障诊断、智能工单派发、运维知识沉淀，降低运维压力</p>
+            </div>
+            <div class="scenario-card">
+                <div class="scenario-icon">🎓</div>
+                <h3>智慧教育</h3>
+                <p>连接教务系统，智能答疑、个性化学习推荐、考试分析、家校沟通自动化</p>
+            </div>
+            <div class="scenario-card">
+                <div class="scenario-icon">🏭</div>
+                <h3>智能制造</h3>
+                <p>对接MES/SCADA系统，生产调度优化、质量预测、设备维护建议，推动工业4.0</p>
+            </div>
+            <div class="scenario-card">
+                <div class="scenario-icon">💼</div>
+                <h3>客户服务</h3>
+                <p>连接CRM系统，智能客服、客户画像分析、商机推荐、服务质量监控</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Highlights -->
+    <section id="highlights" class="fade-in">
+        <div class="section-header">
+            <h2>技术亮点</h2>
+            <p>基于成熟的Java生态，为企业AI落地扫清障碍</p>
+        </div>
+        <div class="highlights">
+            <div class="highlight-item">
+                <div class="highlight-icon">☕</div>
+                <h4>原生Java实现</h4>
+                <p>Spring Boot 3.x 技术栈，无缝融入企业现有架构</p>
+            </div>
+            <div class="highlight-item">
+                <div class="highlight-icon">🔌</div>
+                <h4>MCP标准协议</h4>
+                <p>遵循开放标准，工具即插即用</p>
+            </div>
+            <div class="highlight-item">
+                <div class="highlight-icon">🧬</div>
+                <h4>自我进化</h4>
+                <p>越用越聪明，自动积累技能</p>
+            </div>
+            <div class="highlight-item">
+                <div class="highlight-icon">🏛️</div>
+                <h4>多租户架构</h4>
+                <p>用户级数据隔离，安全合规</p>
+            </div>
+            <div class="highlight-item">
+                <div class="highlight-icon">🌐</div>
+                <h4>全平台接入</h4>
+                <p>企微/钉钉/飞书/微信一网打尽</p>
+            </div>
+            <div class="highlight-item">
+                <div class="highlight-icon">⚡</div>
+                <h4>零侵入对接</h4>
+                <p>传统系统无需任何改造</p>
+            </div>
+        </div>
+
+        <div class="section-header" style="margin-top: 4rem;">
+            <h2>技术栈</h2>
+        </div>
+        <div class="tech-stack">
+            <span class="tech-tag">Spring Boot 3.x</span>
+            <span class="tech-tag">Spring AI Alibaba</span>
+            <span class="tech-tag">MCP Protocol</span>
+            <span class="tech-tag">MySQL</span>
+            <span class="tech-tag">Redis</span>
+            <span class="tech-tag">HSQLDB</span>
+            <span class="tech-tag">Flyway</span>
+            <span class="tech-tag">JWT</span>
+            <span class="tech-tag">React</span>
+            <span class="tech-tag">WebSocket</span>
+            <span class="tech-tag">Docker</span>
+            <span class="tech-tag">Nginx</span>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta-section fade-in">
+        <h2>让你的系统进入AI时代</h2>
+        <p>无论你的系统有多"传统"，我们都能帮你接入AI能力</p>
+        <div class="hero-buttons">
+            <a href="https://github.com" class="btn btn-primary">GitHub 开源</a>
+            <a href="#" class="btn btn-outline">技术文档</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>AI Agent Java SDK &copy; 2024-2026 | 基于 Spring Boot + Spring AI Alibaba + MCP 构建</p>
+        <p style="margin-top:8px;font-size:11px;"><a href="https://beian.miit.gov.cn" target="_blank" rel="nofollow" style="color:var(--text-muted);text-decoration:none;">浙ICP备2023046364号-1</a></p>
+    </footer>
+
+    <script>
+        // Particle animation
+        function createParticles() {
+            const container = document.getElementById('particles');
+            const count = 30;
+
+            for (let i = 0; i < count; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDuration = (Math.random() * 15 + 10) + 's';
+                particle.style.animationDelay = Math.random() * 15 + 's';
+                particle.style.width = (Math.random() * 3 + 1) + 'px';
+                particle.style.height = particle.style.width;
+                container.appendChild(particle);
+            }
+        }
+
+        // Scroll animations
+        function handleScroll() {
+            const elements = document.querySelectorAll('.fade-in');
+            elements.forEach(el => {
+                const rect = el.getBoundingClientRect();
+                if (rect.top < window.innerHeight * 0.85) {
+                    el.classList.add('visible');
+                }
+            });
+        }
+
+        // Smooth scroll for nav links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        // Init
+        createParticles();
+        window.addEventListener('scroll', handleScroll);
+        handleScroll();
+
+        // Typing effect for hero (optional subtle glow)
+        const hero = document.querySelector('.hero h1');
+        hero.style.animation = 'none';
+        hero.offsetHeight;
+    </script>
+</body>
+</html>

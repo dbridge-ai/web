@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="SQLTools - 一站式在线SQL处理平台，支持32种数据库方言互转、SQL格式化、Dump拆分/合并/转换、ER图生成、数据脱敏等功能">
+  <meta name="keywords" content="SQL转换,SQL格式化,SQL方言转换,dump拆分,ER图,数据脱敏,在线SQL工具">
+  <title>好么好物</title>
+  <style>
+    :root {
+      --primary: #4F46E5;
+      --primary-dark: #3730A3;
+      --primary-light: #818CF8;
+      --accent: #06B6D4;
+      --bg: #F8FAFC;
+      --bg-card: #FFFFFF;
+      --text: #1E293B;
+      --text-light: #64748B;
+      --border: #E2E8F0;
+      --success: #10B981;
+      --warning: #F59E0B;
+      --danger: #EF4444;
+      --gradient-start: #4F46E5;
+      --gradient-end: #7C3AED;
+      --radius: 12px;
+      --shadow: 0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.1);
+      --shadow-lg: 0 10px 25px rgba(0,0,0,.08), 0 4px 6px rgba(0,0,0,.05);
+      --shadow-xl: 0 20px 40px rgba(0,0,0,.1);
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      color: var(--text);
+      background: var(--bg);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+    a { text-decoration: none; color: var(--primary); }
+
+    /* ── Nav ── */
+    .nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(255,255,255,.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 48px;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 64px;
+      transition: box-shadow .2s;
+    }
+    .nav.scrolled { box-shadow: var(--shadow); }
+    .nav-logo {
+      display: flex; align-items: center; gap: 10px;
+      font-size: 22px; font-weight: 700; color: var(--primary);
+    }
+    .nav-logo svg { width: 36px; height: 36px; }
+    .nav-links { display: flex; gap: 32px; align-items: center; }
+    .nav-links a {
+      color: var(--text-light); font-size: 15px; font-weight: 500;
+      transition: color .2s; position: relative;
+    }
+    .nav-links a:hover, .nav-links a.active { color: var(--primary); }
+    .nav-cta {
+      background: var(--primary); color: #fff !important;
+      padding: 8px 20px; border-radius: 8px; font-weight: 600;
+      transition: background .2s, transform .2s;
+    }
+    .nav-cta:hover { background: var(--primary-dark); transform: translateY(-1px); }
+
+    .nav-main { display: flex; gap: 4px; align-items: center; margin-left: 8px; padding-left: 20px; border-left: 1px solid var(--border); }
+    .nav-main a {
+      padding: 6px 14px; border-radius: 7px;
+      font-size: 13px; font-weight: 500; text-decoration: none;
+      color: var(--text-light); transition: all .2s;
+    }
+    .nav-main a:hover { color: var(--primary); background: #EEF2FF; }
+    .nav-main a.active { color: var(--primary); background: #EEF2FF; font-weight: 600; }
+
+    /* ── Hero ── */
+    .hero {
+      padding: 160px 48px 100px;
+      text-align: center;
+      background: linear-gradient(135deg, #EEF2FF 0%, #E0E7FF 40%, #F0F9FF 100%);
+      position: relative; overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; top: -200px; right: -150px;
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(79,70,229,.08) 0%, transparent 70%);
+      border-radius: 50%;
+    }
+    .hero::after {
+      content: '';
+      position: absolute; bottom: -100px; left: -100px;
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, rgba(6,182,212,.06) 0%, transparent 70%);
+      border-radius: 50%;
+    }
+    .hero-badge {
+      display: inline-block; position: relative; z-index: 1;
+      background: rgba(79,70,229,.1); color: var(--primary);
+      padding: 6px 16px; border-radius: 20px;
+      font-size: 14px; font-weight: 600; margin-bottom: 24px;
+    }
+    .hero h1 {
+      position: relative; z-index: 1;
+      font-size: 52px; font-weight: 800; line-height: 1.2;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--gradient-end) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+      max-width: 720px; margin: 0 auto 20px;
+    }
+    .hero-desc {
+      position: relative; z-index: 1;
+      font-size: 18px; color: var(--text-light); max-width: 600px;
+      margin: 0 auto 40px;
+    }
+    .hero-actions {
+      position: relative; z-index: 1;
+      display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;
+    }
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 14px 32px; border-radius: var(--radius);
+      font-size: 16px; font-weight: 600; cursor: pointer;
+      transition: all .2s; border: none;
+    }
+    .btn-primary {
+      background: var(--primary); color: #fff;
+      box-shadow: 0 4px 14px rgba(79,70,229,.4);
+    }
+    .btn-primary:hover { background: var(--primary-dark); transform: translateY(-2px); box-shadow: var(--shadow-xl); }
+    .btn-outline {
+      background: #fff; color: var(--primary);
+      border: 2px solid var(--primary-light);
+    }
+    .btn-outline:hover { background: #EEF2FF; transform: translateY(-2px); }
+    .btn-lg { padding: 16px 40px; font-size: 18px; }
+
+    /* ── Ad Bar ── */
+    .ad-bar {
+      display: flex; justify-content: center; gap: 60px;
+      padding: 40px 48px; background: #fff;
+      border-bottom: 1px solid var(--border);
+    }
+    .ad-item { text-align: center; }
+    .ad-num { font-size: 36px; font-weight: 800; color: var(--primary); }
+    .ad-label { font-size: 14px; color: var(--text-light); margin-top: 4px; }
+
+    /* ── Sections ── */
+    .section {
+      padding: 80px 48px; max-width: 1200px; margin: 0 auto;
+    }
+    .section-header {
+      text-align: center; margin-bottom: 56px;
+    }
+    .section-header h2 {
+      font-size: 36px; font-weight: 700; margin-bottom: 12px;
+    }
+    .section-header p {
+      font-size: 16px; color: var(--text-light); max-width: 500px; margin: 0 auto;
+    }
+    .section-label {
+      display: inline-block;
+      background: rgba(79,70,229,.08); color: var(--primary);
+      padding: 4px 14px; border-radius: 20px;
+      font-size: 13px; font-weight: 600; margin-bottom: 12px;
+      letter-spacing: .5px; text-transform: uppercase;
+    }
+
+    /* ── Feature Cards ── */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+    .feature-card {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 32px 28px;
+      transition: all .25s; position: relative; overflow: hidden;
+    }
+    .feature-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      transform: scaleX(0); transition: transform .25s;
+    }
+    .feature-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-4px); }
+    .feature-card:hover::before { transform: scaleX(1); }
+    .feature-icon {
+      width: 48px; height: 48px; border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 24px; margin-bottom: 18px;
+    }
+    .fi-blue { background: #EEF2FF; color: var(--primary); }
+    .fi-cyan { background: #ECFEFF; color: #0891B2; }
+    .fi-green { background: #ECFDF5; color: #059669; }
+    .fi-amber { background: #FFFBEB; color: #D97706; }
+    .fi-purple { background: #F5F3FF; color: #7C3AED; }
+    .fi-rose { background: #FFF1F2; color: #E11D48; }
+    .feature-card h3 { font-size: 18px; font-weight: 600; margin-bottom: 8px; }
+    .feature-card p { font-size: 14px; color: var(--text-light); line-height: 1.7; }
+
+    /* ── Dialects ── */
+    .dialect-cloud {
+      display: flex; flex-wrap: wrap; gap: 12px; justify-content: center;
+      max-width: 800px; margin: 0 auto;
+    }
+    .dialect-tag {
+      background: #fff; border: 1px solid var(--border);
+      padding: 8px 18px; border-radius: 20px;
+      font-size: 14px; font-weight: 500; color: var(--text);
+      transition: all .2s;
+    }
+    .dialect-tag:hover {
+      border-color: var(--primary-light); color: var(--primary);
+      background: #EEF2FF; transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(79,70,229,.1);
+    }
+    .dialect-tag.highlight {
+      background: var(--primary); border-color: var(--primary); color: #fff;
+      font-weight: 600;
+    }
+
+    /* ── How it works ── */
+    .steps {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px;
+      position: relative;
+    }
+    .step {
+      text-align: center; position: relative;
+      padding: 32px 20px; background: #fff;
+      border: 1px solid var(--border); border-radius: var(--radius);
+      transition: all .2s;
+    }
+    .step:hover { box-shadow: var(--shadow-lg); transform: translateY(-2px); }
+    .step-num {
+      width: 44px; height: 44px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), var(--gradient-end));
+      color: #fff; font-size: 20px; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 16px;
+    }
+    .step h4 { font-size: 16px; font-weight: 600; margin-bottom: 6px; }
+    .step p { font-size: 13px; color: var(--text-light); }
+
+    /* ── Code Demo ── */
+    .demo-section { background: #0F172A; padding: 80px 48px; }
+    .demo-section .section-label { background: rgba(129,140,248,.2); color: var(--primary-light); }
+    .demo-section h2, .demo-section p { color: #E2E8F0; }
+    .demo-section .section-header p { color: #94A3B8; }
+    .demo-grid {
+      display: grid; grid-template-columns: 1fr auto 1fr;
+      gap: 24px; max-width: 1100px; margin: 0 auto; align-items: center;
+    }
+    .code-block {
+      background: #1E293B; border: 1px solid #334155;
+      border-radius: var(--radius); padding: 24px; overflow-x: auto;
+    }
+    .code-block .lang {
+      font-size: 12px; color: #94A3B8; margin-bottom: 12px;
+      text-transform: uppercase; letter-spacing: 1px;
+    }
+    .code-block pre {
+      font-family: "JetBrains Mono", "Fira Code", "SF Mono", monospace;
+      font-size: 13px; line-height: 1.8; color: #CBD5E1;
+      white-space: pre; margin: 0;
+    }
+    .code-block .kw { color: #C084FC; }
+    .code-block .str { color: #34D399; }
+    .code-block .fn { color: #60A5FA; }
+    .code-block .num { color: #FB923C; }
+    .code-block .cmt { color: #64748B; font-style: italic; }
+    .arrow-icon {
+      display: flex; align-items: center; justify-content: center;
+      color: var(--primary-light); font-size: 32px;
+    }
+
+    /* ── Pricing / CTA ── */
+    .cta-section {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--gradient-end) 100%);
+      padding: 80px 48px; text-align: center; color: #fff;
+    }
+    .cta-section h2 { font-size: 36px; font-weight: 700; margin-bottom: 12px; }
+    .cta-section p { font-size: 18px; opacity: .85; margin-bottom: 32px; max-width: 500px; margin: 0 auto 32px; }
+    .btn-cta {
+      background: #fff; color: var(--primary);
+      font-size: 18px; padding: 16px 40px; border-radius: var(--radius);
+      font-weight: 700; border: none; cursor: pointer;
+      transition: all .2s;
+    }
+    .btn-cta:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(0,0,0,.3); }
+
+    /* ── Footer ── */
+    .footer {
+      background: #0F172A; color: #94A3B8; padding: 48px;
+      text-align: center; font-size: 14px;
+    }
+    .footer-links { display: flex; gap: 24px; justify-content: center; margin-bottom: 16px; }
+    .footer-links a { color: #94A3B8; transition: color .2s; }
+    .footer-links a:hover { color: #fff; }
+
+    /* ── Animations ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-up { animation: fadeUp .6s ease forwards; opacity: 0; }
+    .animate-up.d1 { animation-delay: .1s; }
+    .animate-up.d2 { animation-delay: .2s; }
+    .animate-up.d3 { animation-delay: .3s; }
+    .animate-up.d4 { animation-delay: .4s; }
+
+    /* ── Responsive refinements for PC ── */
+    @media (max-width: 1024px) {
+      .features-grid { grid-template-columns: repeat(2, 1fr); }
+      .steps { grid-template-columns: repeat(2, 1fr); }
+      .demo-grid { grid-template-columns: 1fr; }
+      .arrow-icon { transform: rotate(90deg); }
+      .nav { padding: 0 24px; }
+      .section { padding: 60px 24px; }
+      .hero { padding: 120px 24px 80px; }
+      .hero h1 { font-size: 36px; }
+      .ad-bar { gap: 30px; flex-wrap: wrap; }
+    }
+    @media (max-width: 640px) {
+      .features-grid { grid-template-columns: 1fr; }
+      .steps { grid-template-columns: 1fr; }
+      .nav-links a:not(.nav-cta) { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ===== Nav ===== -->
+<nav class="nav" id="nav">
+  <a href="index.html" class="nav-logo">
+    <svg viewBox="0 0 36 36" fill="none"><rect width="36" height="36" rx="8" fill="#4F46E5"/><text x="50%" y="54%" dominant-baseline="central" text-anchor="middle" fill="#fff" font-size="18" font-weight="800" font-family="monospace">S</text></svg>
+    SQLTools
+  </a>
+  <div class="nav-links">
+    <a href="#features">核心功能</a>
+    <a href="#dialects">支持方言</a>
+    <a href="#how">如何使用</a>
+    <a href="#demo">示例</a>
+  </div>
+  <div class="nav-main">
+    <a href="index.html">首页</a>
+    <a href="sql-tools-pc.html" class="active">SQLTools</a>
+    <a href="dbridge.html">DBridge</a>
+    <a href="ai-agent.html">AI Agent</a>
+  </div>
+</nav>
+
+<!-- ===== Hero ===== -->
+<section class="hero">
+  <div class="hero-badge">🚀 集成 polyglot-sql &amp; sql-splitter</div>
+  <h1 class="animate-up">SQL处理从未如此<br>简单高效</h1>
+  <p class="hero-desc animate-up d1">
+    一站式在线SQL工具平台，支持<strong>32种数据库方言</strong>互转、SQL格式化/验证/分析、
+    Dump文件拆分合并、ER图生成、数据脱敏等强大功能。
+  </p>
+  <div class="hero-actions animate-up d2">
+    <a href="https://sql-tools.homej.top/app" class="btn btn-primary btn-lg">🎯 立即体验</a>
+    <a href="#features" class="btn btn-outline btn-lg">📖 了解更多</a>
+  </div>
+</section>
+
+<!-- ===== Ad Bar ===== -->
+<div class="ad-bar">
+  <div class="ad-item animate-up">
+    <div class="ad-num" id="count-dialects">32</div>
+    <div class="ad-label">支持数据库方言</div>
+  </div>
+  <div class="ad-item animate-up d1">
+    <div class="ad-num">200+</div>
+    <div class="ad-label">AST表达式类型</div>
+  </div>
+  <div class="ad-item animate-up d2">
+    <div class="ad-num">600MB/s</div>
+    <div class="ad-label">Dump处理吞吐量</div>
+  </div>
+  <div class="ad-item animate-up d3">
+    <div class="ad-num">100%</div>
+    <div class="ad-label">免费使用</div>
+  </div>
+</div>
+
+<!-- ===== Features ===== -->
+<section class="section" id="features">
+  <div class="section-header">
+    <span class="section-label">核心功能</span>
+    <h2>覆盖SQL全流程的工具集</h2>
+    <p>从语法解析到Dump文件处理，一个平台满足所有SQL操作需求</p>
+  </div>
+  <div class="features-grid">
+    <!-- 1 -->
+    <div class="feature-card animate-up">
+      <div class="feature-icon fi-blue">🔄</div>
+      <h3>SQL方言互转</h3>
+      <p>支持32种数据库方言任意转换，自动检测源方言。MySQL ↔ PostgreSQL ↔ SQLite ↔ MSSQL 等完整互转支持。</p>
+    </div>
+    <!-- 2 -->
+    <div class="feature-card animate-up d1">
+      <div class="feature-icon fi-cyan">✨</div>
+      <h3>SQL格式化 & 美化</h3>
+      <p>一键格式化SQL语句，统一缩进、换行与大小写风格，让SQL代码清晰易读，支持所有主流方言。</p>
+    </div>
+    <!-- 3 -->
+    <div class="feature-card animate-up d2">
+      <div class="feature-icon fi-green">✅</div>
+      <h3>SQL语法验证</h3>
+      <p>精准的语法检查与错误定位报告，支持严格模式，帮助快速排查SQL语法问题，提升开发效率。</p>
+    </div>
+    <!-- 4 -->
+    <div class="feature-card animate-up">
+      <div class="feature-icon fi-purple">📊</div>
+      <h3>SQL深度分析</h3>
+      <p>解析SQL AST，提取表、列、CTE、投影、关系、集合操作等完整查询分析信息，200+表达式类型全覆盖。</p>
+    </div>
+    <!-- 5 -->
+    <div class="feature-card animate-up d1">
+      <div class="feature-icon fi-amber">📦</div>
+      <h3>Dump拆分 & 合并</h3>
+      <p>流式架构处理超大dump文件（10GB+），支持MySQL/PostgreSQL/SQLite/MSSQL格式，600MB/s吞吐量。</p>
+    </div>
+    <!-- 6 -->
+    <div class="feature-card animate-up d2">
+      <div class="feature-icon fi-blue">🔄</div>
+      <h3>Dump方言转换</h3>
+      <p>整库dump文件在MySQL/PostgreSQL/SQLite/MSSQL之间互转，50+数据类型映射，COPY ↔ INSERT自动适配。</p>
+    </div>
+    <!-- 7 -->
+    <div class="feature-card animate-up">
+      <div class="feature-icon fi-rose">🔒</div>
+      <h3>数据脱敏</h3>
+      <p>支持NULL化、SHA256哈希、部分掩码、虚假数据生成等5+策略，25+伪造数据生成器，可重现结果。</p>
+    </div>
+    <!-- 8 -->
+    <div class="feature-card animate-up d1">
+      <div class="feature-icon fi-cyan">📈</div>
+      <h3>ER图生成</h3>
+      <p>从dump文件自动生成交互式ER图，支持HTML/DOT/Mermaid/JSON多种输出格式，支持表过滤与聚焦。</p>
+    </div>
+    <!-- 9 -->
+    <div class="feature-card animate-up d2">
+      <div class="feature-icon fi-purple">🔍</div>
+      <h3>Dump Diff & 对比</h3>
+      <p>对比两个SQL dump的差异，检测表/列/索引/主外键/数据行的增删改，支持Text/JSON/SQL输出。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Dialects ===== -->
+<section class="section" id="dialects">
+  <div class="section-header">
+    <span class="section-label">多方言支持</span>
+    <h2>覆盖32种主流数据库方言</h2>
+    <p>一次编写，到处运行。在不同数据库之间自由转换SQL语句及完整dump文件</p>
+  </div>
+  <div class="dialect-cloud">
+    <span class="dialect-tag highlight">MySQL</span>
+    <span class="dialect-tag highlight">PostgreSQL</span>
+    <span class="dialect-tag highlight">SQLite</span>
+    <span class="dialect-tag highlight">MSSQL</span>
+    <span class="dialect-tag">MariaDB</span>
+    <span class="dialect-tag">Snowflake</span>
+    <span class="dialect-tag">BigQuery</span>
+    <span class="dialect-tag">Redshift</span>
+    <span class="dialect-tag">ClickHouse</span>
+    <span class="dialect-tag">DuckDB</span>
+    <span class="dialect-tag">Trino</span>
+    <span class="dialect-tag">Presto</span>
+    <span class="dialect-tag">Oracle</span>
+    <span class="dialect-tag">Hive</span>
+    <span class="dialect-tag">Spark SQL</span>
+    <span class="dialect-tag">Databricks</span>
+    <span class="dialect-tag">IBM DB2</span>
+    <span class="dialect-tag">Teradata</span>
+    <span class="dialect-tag">CockroachDB</span>
+    <span class="dialect-tag">Vertica</span>
+    <span class="dialect-tag">Greenplum</span>
+    <span class="dialect-tag">Exasol</span>
+    <span class="dialect-tag">MonetDB</span>
+    <span class="dialect-tag">+ 更多...</span>
+  </div>
+</section>
+
+<!-- ===== How it works ===== -->
+<section class="section" id="how">
+  <div class="section-header">
+    <span class="section-label">快速上手</span>
+    <h2>三步完成SQL处理</h2>
+    <p>无需安装、无需注册，直接在浏览器中完成所有操作</p>
+  </div>
+  <div class="steps">
+    <div class="step animate-up">
+      <div class="step-num">1</div>
+      <h4>输入SQL / 上传文件</h4>
+      <p>粘贴或输入SQL语句，或上传dump文件到平台</p>
+    </div>
+    <div class="step animate-up d1">
+      <div class="step-num">2</div>
+      <h4>选择操作 & 配置</h4>
+      <p>选择源/目标方言、操作类型，配置相关参数</p>
+    </div>
+    <div class="step animate-up d2">
+      <div class="step-num">3</div>
+      <h4>执行处理</h4>
+      <p>一键执行，引擎在毫秒/秒级完成转换或分析</p>
+    </div>
+    <div class="step animate-up d3">
+      <div class="step-num">4</div>
+      <h4>获取结果</h4>
+      <p>查看、复制格式化SQL，或下载处理后的dump文件</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Demo ===== -->
+<section class="demo-section" id="demo">
+  <div class="section-header">
+    <span class="section-label">代码示例</span>
+    <h2>SQL方言转换效果演示</h2>
+    <p>MySQL DDL 一键转 PostgreSQL，包括数据类型自动映射</p>
+  </div>
+  <div class="demo-grid">
+    <div class="code-block animate-up">
+      <div class="lang">🐬 MySQL</div>
+      <pre><span class="cmt">-- MySQL DDL</span>
+<span class="kw">CREATE TABLE</span> users (
+  id <span class="fn">INT</span> <span class="kw">AUTO_INCREMENT</span>,
+  name <span class="fn">VARCHAR</span>(<span class="num">100</span>) <span class="kw">NOT NULL</span>,
+  email <span class="fn">VARCHAR</span>(<span class="num">255</span>) <span class="kw">UNIQUE</span>,
+  age <span class="fn">TINYINT</span> <span class="kw">UNSIGNED</span>,
+  salary <span class="fn">DECIMAL</span>(<span class="num">10</span>, <span class="num">2</span>),
+  created_at <span class="fn">DATETIME</span> <span class="kw">DEFAULT</span> <span class="kw">CURRENT_TIMESTAMP</span>,
+  <span class="kw">PRIMARY KEY</span> (id)
+) <span class="kw">ENGINE</span>=<span class="fn">InnoDB</span>;
+
+<span class="kw">INSERT INTO</span> users (name, email, age)
+  <span class="kw">VALUES</span> (<span class="str">'Alice'</span>, <span class="str">'alice@test.com'</span>, <span class="num">28</span>);</pre>
+    </div>
+    <div class="arrow-icon">➡️</div>
+    <div class="code-block animate-up d1">
+      <div class="lang">🐘 PostgreSQL</div>
+      <pre><span class="cmt">-- PostgreSQL DDL</span>
+<span class="kw">CREATE TABLE</span> users (
+  id <span class="fn">SERIAL</span>,
+  name <span class="fn">VARCHAR</span>(<span class="num">100</span>) <span class="kw">NOT NULL</span>,
+  email <span class="fn">VARCHAR</span>(<span class="num">255</span>) <span class="kw">UNIQUE</span>,
+  age <span class="fn">SMALLINT</span>,
+  salary <span class="fn">DECIMAL</span>(<span class="num">10</span>, <span class="num">2</span>),
+  created_at <span class="fn">TIMESTAMP</span> <span class="kw">DEFAULT</span> <span class="kw">CURRENT_TIMESTAMP</span>,
+  <span class="kw">PRIMARY KEY</span> (id)
+);
+
+<span class="kw">INSERT INTO</span> users (name, email, age)
+  <span class="kw">VALUES</span> (<span class="str">'Alice'</span>, <span class="str">'alice@test.com'</span>, <span class="num">28</span>);</pre>
+    </div>
+  </div>
+  <p style="text-align:center; margin-top: 32px; color: #94A3B8; font-size: 14px;">
+    ✨ AUTO_INCREMENT ↔ SERIAL | TINYINT UNSIGNED ↔ SMALLINT | DATETIME ↔ TIMESTAMP | 50+类型映射自动完成
+  </p>
+</section>
+
+
+<!-- ===== CTA ===== -->
+<section class="cta-section" id="cta">
+  <h2 class="animate-up">准备好提升SQL效率了吗？</h2>
+  <p class="animate-up d1">完全免费，无需注册，即开即用。支持所有主流数据库方言。</p>
+  <a href="https://sql-tools.homej.top/app" class="btn-cta animate-up d2">🎯 立即免费使用 →</a>
+</section>
+
+
+<!-- ===== Footer ===== -->
+<footer class="footer">
+  <div class="footer-links">
+    <a href="https://sql-tools.homej.top/app">SQL转换</a>
+    <a href="https://sql-tools.homej.top/app">SQL格式化</a>
+    <a href="https://sql-tools.homej.top/app">Dump拆分</a>
+    <a href="https://sql-tools.homej.top/app">ER图</a>
+    <a href="https://sql-tools.homej.top/app">数据脱敏</a>
+  </div>
+  <p>基于 <strong>polyglot-sql v0.5.10</strong> &amp; <strong>sql-splitter v1.13.6</strong> 构建 · Rust + React 技术栈</p>
+  <p style="margin-top:8px;font-size:12px;">&copy; 2026 SQLTools. All rights reserved.</p>
+  <p style="margin-top:8px;font-size:11px;"><a href="https://beian.miit.gov.cn" target="_blank" rel="nofollow" style="color:#94A3B8;text-decoration:none;">浙ICP备2023046364号-1</a></p>
+</footer>
+
+<script>
+  // Nav scroll effect
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 10);
+  });
+
+  // Smooth scroll for anchor links
+  document.querySelectorAll('a[href^="#"]').forEach(link => {
+    link.addEventListener('click', e => {
+      e.preventDefault();
+      const target = document.querySelector(link.getAttribute('href'));
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+
+  // Animate elements when scrolled into view
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.style.animationPlayState = 'running';
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.animate-up').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>

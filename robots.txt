@@ -1,0 +1,21 @@
+# 数智工坊 robots.txt
+# 适用于所有搜索引擎爬虫
+
+User-agent: *
+# 禁止抓取内部文档目录
+Disallow: /docs/
+# 禁止抓取测试页面
+Disallow: /a.html
+# 禁止抓取 .git 版本控制目录
+Disallow: /.git/
+
+# 允许所有主要产品页面（默认允许，此处显式声明增强兼容性）
+Allow: /index.html
+Allow: /ai-agent.html
+Allow: /dbridge.html
+Allow: /sql-tools-h5.html
+Allow: /sql-tools-pc.html
+
+# 禁止抓取无后缀的路径前缀（避免目录遍历）
+Disallow: /docs
+Disallow: /.git

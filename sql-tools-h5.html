@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="description" content="SQLTools - 一站式在线SQL处理平台，支持32种数据库方言互转、SQL格式化、Dump拆分、ER图生成、数据脱敏等功能，手机端随时随地处理SQL">
+  <meta name="keywords" content="SQL转换,SQL格式化,SQL方言转换,手机SQL工具,在线SQL">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <title>好么好物</title>
+  <style>
+    :root {
+      --primary: #4F46E5;
+      --primary-dark: #3730A3;
+      --primary-light: #818CF8;
+      --accent: #06B6D4;
+      --bg: #F1F5F9;
+      --bg-card: #FFFFFF;
+      --text: #0F172A;
+      --text-light: #64748B;
+      --border: #E2E8F0;
+      --radius: 14px;
+      --radius-sm: 10px;
+      --safe-bottom: env(safe-area-inset-bottom, 16px);
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+      color: var(--text);
+      background: var(--bg);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      padding-bottom: calc(80px + var(--safe-bottom));
+    }
+    a { text-decoration: none; color: var(--primary); }
+
+    /* ── Top Bar ── */
+    .topbar {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(255,255,255,.88);
+      backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+      padding: 12px 20px;
+      display: flex; align-items: center; justify-content: space-between;
+      border-bottom: 1px solid transparent;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .topbar.scrolled { border-color: var(--border); box-shadow: 0 1px 8px rgba(0,0,0,.04); }
+    .topbar-logo {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 19px; font-weight: 700; color: var(--primary);
+    }
+    .topbar-logo .icon {
+      width: 32px; height: 32px; border-radius: 8px;
+      background: var(--primary); color: #fff;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; font-weight: 800; font-family: monospace;
+    }
+    .topbar-btn {
+      background: var(--primary); color: #fff;
+      padding: 8px 16px; border-radius: 20px;
+      font-size: 13px; font-weight: 600;
+      border: none; cursor: pointer;
+    }
+
+    
+    /* ── Hero ── */
+    .hero {
+      padding: 36px 20px 40px;
+      text-align: center;
+      background: linear-gradient(160deg, #EEF2FF 0%, #E0E7FF 50%, #F0F9FF 100%);
+      position: relative; overflow: hidden;
+    }
+    .hero::after {
+      content: '';
+      position: absolute; bottom: -80px; right: -60px;
+      width: 240px; height: 240px;
+      background: radial-gradient(circle, rgba(79,70,229,.06) 0%, transparent 70%);
+      border-radius: 50%;
+    }
+    .hero-badge {
+      display: inline-block; position: relative; z-index: 1;
+      background: rgba(79,70,229,.12); color: var(--primary);
+      padding: 5px 14px; border-radius: 20px;
+      font-size: 13px; font-weight: 600; margin-bottom: 20px;
+    }
+    .hero h1 {
+      position: relative; z-index: 1;
+      font-size: 28px; font-weight: 800; line-height: 1.3;
+      color: var(--text); margin-bottom: 12px;
+    }
+    .hero h1 span {
+      background: linear-gradient(135deg, var(--primary) 0%, #7C3AED 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero-desc {
+      position: relative; z-index: 1;
+      font-size: 15px; color: var(--text-light);
+      margin-bottom: 24px; line-height: 1.6;
+    }
+    .hero-actions {
+      position: relative; z-index: 1;
+      display: flex; flex-direction: column; gap: 10px;
+      padding: 0 16px;
+    }
+    .btn {
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+      padding: 14px 24px; border-radius: var(--radius);
+      font-size: 16px; font-weight: 600; cursor: pointer;
+      transition: all .2s; border: none; width: 100%;
+    }
+    .btn-primary {
+      background: var(--primary); color: #fff;
+      box-shadow: 0 4px 14px rgba(79,70,229,.35);
+    }
+    .btn-primary:active { background: var(--primary-dark); transform: scale(.98); }
+    .btn-outline {
+      background: #fff; color: var(--primary);
+      border: 2px solid var(--primary-light);
+    }
+    .btn-outline:active { background: #EEF2FF; transform: scale(.98); }
+
+    /* ── Stats Bar ── */
+    .stats-bar {
+      display: flex; justify-content: space-around;
+      padding: 24px 16px; background: #fff; margin: -12px 16px 0;
+      border-radius: var(--radius); position: relative; z-index: 2;
+      box-shadow: 0 2px 12px rgba(0,0,0,.05);
+    }
+    .stat-item { text-align: center; }
+    .stat-num { font-size: 24px; font-weight: 800; color: var(--primary); }
+    .stat-label { font-size: 11px; color: var(--text-light); margin-top: 2px; }
+
+    /* ── Sections ── */
+    .section { padding: 32px 16px; }
+    .section-header { margin-bottom: 24px; }
+    .section-label {
+      display: inline-block;
+      background: rgba(79,70,229,.08); color: var(--primary);
+      padding: 4px 12px; border-radius: 20px;
+      font-size: 12px; font-weight: 600; margin-bottom: 8px;
+      letter-spacing: .5px; text-transform: uppercase;
+    }
+    .section-header h2 { font-size: 22px; font-weight: 700; margin-bottom: 6px; }
+    .section-header p { font-size: 14px; color: var(--text-light); }
+
+    /* ── Feature Cards (Horizontal Scroll) ── */
+    .feature-scroll {
+      display: flex; gap: 14px; overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      padding-bottom: 8px;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    .feature-scroll::-webkit-scrollbar { display: none; }
+    .feature-card {
+      flex: 0 0 260px; scroll-snap-align: start;
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 24px 20px;
+      position: relative; overflow: hidden;
+    }
+    .feature-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      transform: scaleX(0); transition: transform .3s;
+    }
+    .feature-card:active::before, .feature-card.touched::before { transform: scaleX(1); }
+    .feature-icon {
+      width: 44px; height: 44px; border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px; margin-bottom: 14px;
+    }
+    .fi-blue { background: #EEF2FF; }
+    .fi-cyan { background: #ECFEFF; }
+    .fi-green { background: #ECFDF5; }
+    .fi-amber { background: #FFFBEB; }
+    .fi-purple { background: #F5F3FF; }
+    .fi-rose { background: #FFF1F2; }
+    .fi-indigo { background: #E0E7FF; }
+    .fi-teal { background: #CCFBF1; }
+    .fi-orange { background: #FFF7ED; }
+    .feature-card h3 { font-size: 15px; font-weight: 600; margin-bottom: 6px; }
+    .feature-card p { font-size: 13px; color: var(--text-light); line-height: 1.6; }
+
+    /* ── Dialect Chips ── */
+    .dialect-scroll {
+      display: flex; flex-wrap: wrap; gap: 8px; justify-content: center;
+    }
+    .dialect-chip {
+      background: #fff; border: 1px solid var(--border);
+      padding: 7px 14px; border-radius: 20px;
+      font-size: 13px; font-weight: 500; color: var(--text);
+    }
+    .dialect-chip.highlight {
+      background: var(--primary); border-color: var(--primary); color: #fff;
+      font-weight: 600;
+    }
+
+    /* ── Steps ── */
+    .step-list { display: flex; flex-direction: column; gap: 14px; }
+    .step-item {
+      display: flex; gap: 14px; align-items: flex-start;
+      background: #fff; padding: 18px; border-radius: var(--radius);
+      border: 1px solid var(--border);
+    }
+    .step-num {
+      width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0;
+      background: linear-gradient(135deg, var(--primary), #7C3AED);
+      color: #fff; font-size: 17px; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .step-content h4 { font-size: 15px; font-weight: 600; margin-bottom: 2px; }
+    .step-content p { font-size: 13px; color: var(--text-light); }
+
+    /* ── Code Demo ── */
+    .demo-section {
+      background: #0F172A; padding: 36px 0; margin: 0;
+    }
+    .demo-section .section { padding: 0 16px; }
+    .demo-section .section-label {
+      background: rgba(129,140,248,.2); color: var(--primary-light);
+    }
+    .demo-section h2, .demo-section p { color: #E2E8F0; }
+    .demo-section .section-header p { color: #94A3B8; }
+    .code-card {
+      background: #1E293B; border: 1px solid #334155;
+      border-radius: var(--radius); padding: 18px; margin-bottom: 16px;
+      overflow-x: auto; -webkit-overflow-scrolling: touch;
+    }
+    .code-card .lang {
+      font-size: 11px; color: #94A3B8; margin-bottom: 10px;
+      text-transform: uppercase; letter-spacing: 1px; font-weight: 600;
+    }
+    .code-card pre {
+      font-family: "SF Mono", "Menlo", "Monaco", monospace;
+      font-size: 11.5px; line-height: 1.2;
+      font-weight: 100;
+      color: #CBD5E1; white-space: pre; margin: 0;
+    }
+    .code-card .kw { color: #C084FC; }
+    .code-card .str { color: #34D399; }
+    .code-card .fn { color: #60A5FA; }
+    .code-card .num { color: #FB923C; }
+    .code-card .cmt { color: #64748B; font-style: italic; }
+    .arrow-center {
+      text-align: center; font-size: 24px; color: var(--primary-light);
+      padding: 4px 0;
+    }
+    .demo-note {
+      text-align: center; color: #94A3B8; font-size: 12px;
+      padding-top: 8px; line-height: 1.5;
+    }
+
+    /* ── Advantages ── */
+    .advantage-list { display: flex; flex-direction: column; gap: 12px; }
+    .advantage-item {
+      display: flex; gap: 12px; align-items: center;
+      background: #fff; padding: 16px; border-radius: var(--radius);
+      border: 1px solid var(--border);
+    }
+    .advantage-icon { font-size: 28px; flex-shrink: 0; }
+    .advantage-text h4 { font-size: 15px; font-weight: 600; }
+    .advantage-text p { font-size: 13px; color: var(--text-light); }
+
+    /* ── CTA ── */
+    .cta-section {
+      background: linear-gradient(135deg, var(--primary) 0%, #7C3AED 100%);
+      padding: 40px 16px; text-align: center; color: #fff;
+      margin: 0;
+    }
+    .cta-section h2 { font-size: 24px; font-weight: 700; margin-bottom: 8px; }
+    .cta-section p { font-size: 15px; opacity: .85; margin-bottom: 20px; }
+    .btn-cta {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: #fff; color: var(--primary);
+      font-size: 17px; padding: 14px 36px; border-radius: var(--radius);
+      font-weight: 700; border: none; cursor: pointer;
+      box-shadow: 0 6px 20px rgba(0,0,0,.2);
+    }
+    .btn-cta:active { transform: scale(.96); }
+
+    /* ── Footer ── */
+    .footer {
+      background: #0F172A; color: #94A3B8;
+      padding: 28px 16px calc(28px + var(--safe-bottom));
+      text-align: center; font-size: 12px;
+    }
+    .footer-links {
+      display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+    .footer-links a { color: #94A3B8; font-size: 13px; }
+    .footer-links a:active { color: #fff; }
+
+    /* ── Bottom CTA bar (fixed) ── */
+    .bottom-bar {
+      position: fixed; bottom: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(255,255,255,.92);
+      backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+      padding: 10px 16px calc(10px + var(--safe-bottom));
+      border-top: 1px solid var(--border);
+      display: flex; gap: 10px;
+    }
+    .bottom-bar .btn-try {
+      flex: 1; background: var(--primary); color: #fff;
+      border: none; border-radius: var(--radius);
+      padding: 12px; font-size: 15px; font-weight: 600;
+      cursor: pointer;
+    }
+    .bottom-bar .btn-home {
+      background: #fff; border: 1.5px solid var(--border);
+      border-radius: var(--radius); padding: 12px;
+      color: var(--text); font-size: 15px; font-weight: 500;
+      cursor: pointer; display: flex; align-items: center; gap: 4px;
+    }
+    .bottom-bar .btn-try:active,
+    .bottom-bar .btn-home:active { transform: scale(.96); }
+
+    /* ── Animations ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .a-fade { opacity: 0; }
+    .a-fade.visible { animation: fadeUp .5s ease forwards; }
+  </style>
+</head>
+<body>
+
+<!-- ===== Top Bar ===== -->
+<div class="topbar" id="topbar">
+  <a href="/" class="topbar-logo">
+    <span class="icon">S</span>SQLTools
+  </a>
+  <a href="https://sql-tools.homej.top/app" class="topbar-btn">立即使用</a>
+</div>
+
+<!-- ===== Hero ===== -->
+<section class="hero">
+  <div class="hero-badge">🚀 polyglot-sql + sql-splitter</div>
+  <h1>SQL处理从未如此<span>简单高效</span></h1>
+  <p class="hero-desc">支持<strong>32种数据库方言</strong>互转 · SQL格式化 · Dump拆分 · ER图 · 数据脱敏</p>
+  <div class="hero-actions">
+    <a href="https://sql-tools.homej.top/app" class="btn btn-primary">🎯 立即免费体验</a>
+    <a href="#features" class="btn btn-outline">📖 了解全部功能</a>
+  </div>
+</section>
+
+<!-- ===== Stats ===== -->
+<div class="stats-bar">
+  <div class="stat-item">
+    <div class="stat-num">32</div>
+    <div class="stat-label">数据库方言</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num">200+</div>
+    <div class="stat-label">表达式类型</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num">600MB</div>
+    <div class="stat-label">/s 吞吐量</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num">免费</div>
+    <div class="stat-label">无需注册</div>
+  </div>
+</div>
+
+<!-- ===== Features ===== -->
+<section class="section" id="features">
+  <div class="section-header">
+    <span class="section-label">核心功能</span>
+    <h2>覆盖SQL全流程</h2>
+    <p>左右滑动查看更多功能 →</p>
+  </div>
+  <div class="feature-scroll">
+    <div class="feature-card">
+      <div class="feature-icon fi-blue">🔄</div>
+      <h3>SQL方言互转</h3>
+      <p>32种方言任意转换，自动检测源方言，MySQL↔PG↔SQLite↔MSSQL完整互转</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon fi-cyan">✨</div>
+      <h3>SQL格式化</h3>
+      <p>一键美化SQL，统一缩进换行风格，支持所有数据库方言</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon fi-green">✅</div>
+      <h3>语法验证</h3>
+      <p>精准语法检查与错误定位，严格模式，快速排查问题</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon fi-purple">📊</div>
+      <h3>深度分析</h3>
+      <p>解析AST提取表/列/CTE/关系，200+表达式类型全覆盖</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon fi-amber">📦</div>
+      <h3>Dump拆分合并</h3>
+      <p>流式处理10GB+大文件，600MB/s，支持4种主流数据库格式</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon fi-rose">🔒</div>
+      <h3>数据脱敏</h3>
+      <p>NULL化/哈希/掩码/伪造数据，25+生成器，可重现结果</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon fi-teal">📈</div>
+      <h3>ER图生成</h3>
+      <p>从dump生成交互式ER图，支持多格式输出</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon fi-indigo">🔄</div>
+      <h3>Dump方言转换</h3>
+      <p>整库dump互转，50+类型映射，COPY↔INSERT适配</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon fi-orange">🔍</div>
+      <h3>Dump Diff</h3>
+      <p>对比两个dump差异，表/列/索行/数据的增删改检测</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Dialects ===== -->
+<section class="section" id="dialects">
+  <div class="section-header">
+    <span class="section-label">多方言支持</span>
+    <h2>覆盖32种主流数据库</h2>
+    <p>一次编写，在任意数据库之间自由转换</p>
+  </div>
+  <div class="dialect-scroll">
+    <span class="dialect-chip highlight">MySQL</span>
+    <span class="dialect-chip highlight">PostgreSQL</span>
+    <span class="dialect-chip highlight">SQLite</span>
+    <span class="dialect-chip highlight">MSSQL</span>
+    <span class="dialect-chip">MariaDB</span>
+    <span class="dialect-chip">Snowflake</span>
+    <span class="dialect-chip">BigQuery</span>
+    <span class="dialect-chip">Redshift</span>
+    <span class="dialect-chip">ClickHouse</span>
+    <span class="dialect-chip">DuckDB</span>
+    <span class="dialect-chip">Trino</span>
+    <span class="dialect-chip">Presto</span>
+    <span class="dialect-chip">Oracle</span>
+    <span class="dialect-chip">Hive</span>
+    <span class="dialect-chip">Spark</span>
+    <span class="dialect-chip">Databricks</span>
+    <span class="dialect-chip">DB2</span>
+    <span class="dialect-chip">Teradata</span>
+    <span class="dialect-chip">+ 更多...</span>
+  </div>
+</section>
+
+<!-- ===== How it works ===== -->
+<section class="section" id="how">
+  <div class="section-header">
+    <span class="section-label">快速上手</span>
+    <h2>三步完成SQL处理</h2>
+    <p>无需安装注册，浏览器中直接使用</p>
+  </div>
+  <div class="step-list">
+    <div class="step-item a-fade">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <h4>输入SQL / 上传文件</h4>
+        <p>粘贴SQL语句或上传dump文件到平台</p>
+      </div>
+    </div>
+    <div class="step-item a-fade">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <h4>选择操作与配置</h4>
+        <p>选择源/目标方言、操作类型，配置参数</p>
+      </div>
+    </div>
+    <div class="step-item a-fade">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <h4>执行处理</h4>
+        <p>一键执行，毫秒/秒级完成转换分析</p>
+      </div>
+    </div>
+    <div class="step-item a-fade">
+      <div class="step-num">4</div>
+      <div class="step-content">
+        <h4>获取结果</h4>
+        <p>复制格式化SQL或下载dump文件</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Demo ===== -->
+<div class="demo-section">
+  <section class="section" id="demo">
+    <div class="section-header">
+      <span class="section-label">代码示例</span>
+      <h2>SQL方言转换效果</h2>
+      <p>MySQL DDL 一键转 PostgreSQL</p>
+    </div>
+    <div class="code-card">
+      <div class="lang">🐬 MySQL</div>
+      <pre><span class="cmt">-- MySQL DDL</span>
+<span class="kw">CREATE TABLE</span> users (
+  id <span class="fn">INT</span> <span class="kw">AUTO_INCREMENT</span>,
+  name <span class="fn">VARCHAR</span>(<span class="num">100</span>) <span class="kw">NOT NULL</span>,
+  email <span class="fn">VARCHAR</span>(<span class="num">255</span>) <span class="kw">UNIQUE</span>,
+  salary <span class="fn">DECIMAL</span>(<span class="num">10</span>,<span class="num">2</span>),
+  created_at <span class="fn">DATETIME</span>
+    <span class="kw">DEFAULT CURRENT_TIMESTAMP</span>,
+  <span class="kw">PRIMARY KEY</span> (id)
+);</pre>
+    </div>
+    <div class="arrow-center">⬇️</div>
+    <div class="code-card">
+      <div class="lang">🐘 PostgreSQL</div>
+      <pre><span class="cmt">-- PostgreSQL DDL</span>
+<span class="kw">CREATE TABLE</span> users (
+  id <span class="fn">SERIAL</span>,
+  name <span class="fn">VARCHAR</span>(<span class="num">100</span>) <span class="kw">NOT NULL</span>,
+  email <span class="fn">VARCHAR</span>(<span class="num">255</span>) <span class="kw">UNIQUE</span>,
+  salary <span class="fn">DECIMAL</span>(<span class="num">10</span>,<span class="num">2</span>),
+  created_at <span class="fn">TIMESTAMP</span>
+    <span class="kw">DEFAULT CURRENT_TIMESTAMP</span>,
+  <span class="kw">PRIMARY KEY</span> (id)
+);</pre>
+    </div>
+    <p class="demo-note">✨ AUTO_INCREMENT↔SERIAL | TINYINT↔SMALLINT | DATETIME↔TIMESTAMP | 50+类型映射</p>
+  </section>
+</div>
+
+<!-- ===== Advantages ===== -->
+<section class="section">
+  <div class="section-header">
+    <span class="section-label">为什么选择我们</span>
+    <h2>SQLTools 核心优势</h2>
+  </div>
+  <div class="advantage-list">
+    <div class="advantage-item a-fade">
+      <span class="advantage-icon">⚡</span>
+      <div class="advantage-text">
+        <h4>极速处理</h4>
+        <p>Rust高性能引擎，Dump处理600MB/s，SQL转换毫秒级响应</p>
+      </div>
+    </div>
+    <div class="advantage-item a-fade">
+      <span class="advantage-icon">🛡️</span>
+      <div class="advantage-text">
+        <h4>隐私安全</h4>
+        <p>数据处理在服务端完成后立即清除，不持久化存储你的SQL与dump文件</p>
+      </div>
+    </div>
+    <div class="advantage-item a-fade">
+      <span class="advantage-icon">🌐</span>
+      <div class="advantage-text">
+        <h4>全平台使用</h4>
+        <p>PC/H5双端适配，浏览器打开即可使用，无需下载安装任何软件</p>
+      </div>
+    </div>
+    <div class="advantage-item a-fade">
+      <span class="advantage-icon">🆓</span>
+      <div class="advantage-text">
+        <h4>永久免费</h4>
+        <p>所有功能免费使用，无需注册登录，即开即用无任何限制</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CTA ===== -->
+<div class="cta-section">
+  <h2>准备好提升SQL效率了吗？</h2>
+  <p>完全免费 · 无需注册 · 即开即用</p>
+  <a href="https://sql-tools.homej.top/app" class="btn-cta">🎯 立即免费使用 →</a>
+</div>
+
+<!-- ===== Footer ===== -->
+<footer class="footer">
+  <div class="footer-links">
+    <a href="https://sql-tools.homej.top/app">SQL转换</a>
+    <a href="https://sql-tools.homej.top/app">格式化</a>
+    <a href="https://sql-tools.homej.top/app">Dump拆分</a>
+    <a href="https://sql-tools.homej.top/app">ER图</a>
+    <a href="https://sql-tools.homej.top/app">脱敏</a>
+  </div>
+  <p>基于 polyglot-sql · sql-splitter 构建</p>
+  <p style="margin-top:4px;">Rust + React 技术栈</p>
+  <p style="margin-top:8px;font-size:11px;opacity:.6;">&copy; 2026 SQLTools</p>
+  <p style="margin-top:8px;font-size:11px;"><a href="https://beian.miit.gov.cn" target="_blank" rel="nofollow" style="color:#94A3B8;text-decoration:none;">浙ICP备2023046364号-1</a></p>
+</footer>
+
+<!-- ===== Bottom Bar ===== -->
+<div class="bottom-bar" id="bottomBar">
+  <a href="/" class="btn-home">🏠 首页</a>
+  <a href="https://sql-tools.homej.top/app" class="btn-try">🎯 立即使用</a>
+</div>
+
+<script>
+  // Topbar scroll shadow
+  const topbar = document.getElementById('topbar');
+  window.addEventListener('scroll', () => {
+    topbar.classList.toggle('scrolled', window.scrollY > 10);
+  });
+
+  // Smooth scroll
+  document.querySelectorAll('a[href^="#"]').forEach(link => {
+    link.addEventListener('click', e => {
+      e.preventDefault();
+      const target = document.querySelector(link.getAttribute('href'));
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+
+  // Intersection Observer for step items & advantages
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.2 });
+
+  document.querySelectorAll('.a-fade').forEach(el => observer.observe(el));
+
+  // Touch feedback on feature cards horizontal scroll
+  document.querySelectorAll('.feature-card').forEach(card => {
+    card.addEventListener('touchstart', () => card.classList.add('touched'));
+    card.addEventListener('touchend', () => card.classList.remove('touched'));
+    card.addEventListener('touchcancel', () => card.classList.remove('touched'));
+  });
+
+  // Show/hide bottom bar based on scroll direction
+  let lastScroll = 0;
+  const bottomBar = document.getElementById('bottomBar');
+  window.addEventListener('scroll', () => {
+    const current = window.scrollY;
+    if (current > lastScroll && current > 300) {
+      bottomBar.style.transform = 'translateY(120%)';
+    } else {
+      bottomBar.style.transform = 'translateY(0)';
+    }
+    lastScroll = current;
+  });
+</script>
+
+</body>
+</html>
