@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>好么好物</title>
+    <title>DBridge数桥数据库管理</title>
     <style>
         * {
             margin: 0;
@@ -11,6 +11,7 @@
             box-sizing: border-box;
         }
 
+        
         :root {
             --primary: #00d4ff;
             --primary-dark: #0099cc;
@@ -126,6 +127,29 @@
 
         .nav-links a:hover {
             color: var(--primary);
+        }
+
+        .nav-main {
+            display: flex;
+            gap: 0.3rem;
+            align-items: center;
+        }
+        .nav-main a {
+            padding: 0.35rem 0.85rem;
+            border-radius: 7px;
+            font-size: 0.83rem;
+            font-weight: 500;
+            text-decoration: none;
+            color: var(--text-muted);
+            transition: all 0.2s;
+        }
+        .nav-main a:hover {
+            color: #fff;
+            background: rgba(0, 212, 255, 0.12);
+        }
+        .nav-main a.active {
+            color: #fff;
+            background: rgba(0, 212, 255, 0.18);
         }
 
         /* Hero Section */
@@ -618,7 +642,7 @@
 
     <!-- Navigation -->
     <nav>
-        <div class="nav-logo">AI Agent SDK</div>
+        <a href="index.html" class="nav-logo" style="text-decoration:none;">AI Agent SDK</a>
         <ul class="nav-links">
             <li><a href="#problems">行业痛点</a></li>
             <li><a href="#features">核心功能</a></li>
@@ -626,6 +650,12 @@
             <li><a href="#scenarios">应用场景</a></li>
             <li><a href="#highlights">技术亮点</a></li>
         </ul>
+        <div class="nav-main">
+            <a href="index.html">首页</a>
+            <a href="sql-tools-pc.html">SQLTools</a>
+            <a href="dbridge.html">DBridge</a>
+            <a href="ai-agent.html" class="active">AI Agent</a>
+        </div>
     </nav>
 
     <!-- Hero -->
@@ -998,7 +1028,8 @@
     <!-- Footer -->
     <footer>
         <p>AI Agent Java SDK &copy; 2024-2026 | 基于 Spring Boot + Spring AI Alibaba + MCP 构建</p>
-        <p style="margin-top:8px;font-size:11px;"><a href="https://beian.miit.gov.cn" target="_blank" rel="nofollow" style="color:var(--text-muted);text-decoration:none;">浙ICP备2023046364号-1</a></p>
+        <p style="margin-top:8px;font-size:11px;"><a href="https://beian.miit.gov.cn" target="_blank" rel="nofollow" style="color:var(--text-muted);text-decoration:none;">浙ICP备2023046364号-2</a></p>
+        <p style="margin-top:8px;font-size:11px;"><a href="https://beian.mps.gov.cn/#/query/webSearch?code=33011002020798" rel="noreferrer" target="_blank" style="color:#ffffff; text-decoration:none;"><image src="./img/beian.png" alt="浙公网安备33011002020798号" style="vertical-align:middle;margin-right:5px; width:20px; height:auto;">浙公网安备33011002020798号</a></p>
     </footer>
 
     <script>

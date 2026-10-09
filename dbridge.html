@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="DBridge 数据库管理与同步平台 — 跨库对比同步、AI智能分析、SQL编辑器、安全合规的企业级数据库管理工具">
     <meta name="keywords" content="数据库同步,跨库对比,DDL同步,数据迁移,MySQL,PostgreSQL,SQL编辑器,AI数据库助手">
-    <title>好么好物</title>
+    <title>DBridge数桥数据库管理</title>
     <style>
         * {
             margin: 0;
@@ -13,6 +13,7 @@
             box-sizing: border-box;
         }
 
+        
         :root {
             --primary: #4F46E5;
             --primary-dark: #3730A3;
@@ -139,6 +140,29 @@
         .nav-cta:hover {
             transform: translateY(-2px);
             box-shadow: var(--glow);
+        }
+
+        .nav-main {
+            display: flex;
+            gap: 0.3rem;
+            align-items: center;
+        }
+        .nav-main a {
+            padding: 0.35rem 0.85rem;
+            border-radius: 7px;
+            font-size: 0.83rem;
+            font-weight: 500;
+            text-decoration: none;
+            color: var(--text-muted);
+            transition: all 0.2s;
+        }
+        .nav-main a:hover {
+            color: #fff;
+            background: rgba(79, 70, 229, 0.12);
+        }
+        .nav-main a.active {
+            color: #fff;
+            background: rgba(79, 70, 229, 0.2);
         }
 
         /* Hero */
@@ -629,7 +653,7 @@
 
     <!-- Navigation -->
     <nav id="nav">
-        <a href="#" class="nav-logo">
+        <a href="index.html" class="nav-logo">
             <div class="nav-logo-icon">D</div>
             DBridge
         </a>
@@ -639,8 +663,13 @@
             <li><a href="#architecture">系统架构</a></li>
             <li><a href="#sync">同步场景</a></li>
             <li><a href="#security">安全保障</a></li>
-            <li><a href="#highlights" class="nav-cta">立即体验</a></li>
         </ul>
+        <div class="nav-main">
+            <a href="index.html">首页</a>
+            <a href="sql-tools-pc.html">SQLTools</a>
+            <a href="dbridge.html" class="active">DBridge</a>
+            <a href="ai-agent.html">AI Agent</a>
+        </div>
     </nav>
 
     <!-- Hero -->
@@ -1057,7 +1086,8 @@
         </div>
         <p>DBridge 数桥 &copy; 2024-2026 | 基于 Rust + React 构建 | MIT License</p>
         <p style="margin-top: 6px; font-size: 12px;">支持 MySQL · PostgreSQL · Oracle · SQL Server · SQLite</p>
-        <p style="margin-top:8px;font-size:11px;"><a href="https://beian.miit.gov.cn" target="_blank" rel="nofollow" style="color:var(--text-muted);text-decoration:none;">浙ICP备2023046364号-1</a></p>
+        <p style="margin-top:8px;font-size:11px;"><a href="https://beian.miit.gov.cn" target="_blank" rel="nofollow" style="color:var(--text-muted);text-decoration:none;">浙ICP备2023046364号-2</a></p>
+        <p style="margin-top:8px;font-size:11px;"><a href="https://beian.mps.gov.cn/#/query/webSearch?code=33011002020798" rel="noreferrer" target="_blank" style="color:#ffffff; text-decoration:none;"><image src="./img/beian.png" alt="浙公网安备33011002020798号" style="vertical-align:middle;margin-right:5px; width:20px; height:auto;">浙公网安备33011002020798号</a></p>
     </footer>
 
     <script>
