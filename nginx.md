@@ -57,6 +57,31 @@ server
     #REWRITE-START URL重写规则引用,修改后将导致面板设置的伪静态规则失效
     include /www/server/panel/vhost/rewrite/www.dbridge-ai.com.conf;
     #REWRITE-END
+    
+    # === 移动端重定向配置（修正版） ===
+    set $is_mobile 0;
+    
+    # 检测移动端 User-Agent
+    if ($http_user_agent ~* "android|iphone|ipod|opera mini|opera mobile|mobile|silk|blackberry|windows phone|iemobile|up.browser|up.link|wap|pda|kindle|miui|xiaomi|huawei|oppo|vivo|oneplus|realme|asus|lenovo|meizu") {
+        set $is_mobile 1;
+    }
+    
+    # 移动端重写规则（重定向到 ecs 目录下的文件）
+    if ($is_mobile = 1) {
+        # 根路径 / → /ecs/h5/index.html
+        rewrite ^/$ /ecs/h5/index.html last;
+        # 带 .html 后缀的页面 → /ecs/h5/xxx.html
+        rewrite ^(.+\.html)$ /ecs/h5/$1 last;
+        # 无后缀的页面 /xxx → /ecs/h5/xxx.html
+        rewrite ^/([^.]+)$ /ecs/h5/$1.html last;
+    }
+    
+    # PC 端重写规则（重定向到 ecs 目录下的文件）
+    if ($is_mobile = 0) {
+        # 根路径 / → /ecs/index.html
+        rewrite ^/$ /ecs/index.html last;
+    }
+    # === 移动端重定向配置结束 ===
 
     # 禁止访问的敏感文件
     location ~* (\.user.ini|\.htaccess|\.htpasswd|\.env.*|\.project|\.bashrc|\.bash_profile|\.bash_logout|\.DS_Store|\.gitignore|\.gitattributes|LICENSE|README\.md|CLAUDE\.md|CHANGELOG\.md|CHANGELOG|CONTRIBUTING\.md|TODO\.md|FAQ\.md|composer\.json|composer\.lock|package(-lock)?\.json|yarn\.lock|pnpm-lock\.yaml|\.\w+~|\.swp|\.swo|\.bak(up)?|\.old|\.tmp|\.temp|\.log|\.sql(\.gz)?|docker-compose\.yml|docker\.env|Dockerfile|\.csproj|\.sln|Cargo\.toml|Cargo\.lock|go\.mod|go\.sum|phpunit\.xml|phpunit\.xml|pom\.xml|build\.gradl|pyproject\.toml|requirements\.txt|application(-\w+)?\.(ya?ml|properties))$
