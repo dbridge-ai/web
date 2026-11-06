@@ -35,7 +35,14 @@
             --danger: #F87171;
         }
 
+        html {
+            width: 100%;
+            overflow-x: hidden;
+        }
+
         body {
+            width: 100%;
+            min-width: 100%;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
             background: var(--bg-dark);
             color: var(--text);
@@ -668,12 +675,21 @@
             .mobile-menu { display: block; }
             nav { padding: 0.8rem 1rem; }
             .architecture { padding: 1.5rem; }
-            section { padding: 3rem 1rem; }
+            section { 
+                padding: 3rem 1rem; 
+                max-width: 100%;
+                margin: 0;
+            }
             .hero { padding: 5rem 1rem 3rem; min-height: auto; }
             .hero h1 { font-size: clamp(1.8rem, 8vw, 2.5rem); }
             .hero p { font-size: 0.95rem; padding: 0 0.5rem; }
             .hero-badge { font-size: 0.75rem; padding: 0.4rem 1rem; }
-            .stats-bar { gap: 1rem; padding: 2rem 1rem; grid-template-columns: repeat(2, 1fr); }
+            .stats-bar { 
+                display: grid;
+                gap: 1rem; 
+                padding: 2rem 1rem; 
+                grid-template-columns: repeat(2, 1fr); 
+            }
             .stat-item { padding: 1rem; }
             .stat-num { font-size: 1.8rem; }
             .features-grid { grid-template-columns: 1fr; }
@@ -681,7 +697,7 @@
             .security-grid { grid-template-columns: 1fr; }
             .highlights { grid-template-columns: repeat(2, 1fr); }
             .section-header h2 { font-size: clamp(1.5rem, 6vw, 2rem); }
-            .section-header p { font-size: 0.9rem; }
+            .section-header p { font-size: 0.9rem; max-width: 100%; }
             .cta-section { padding: 3rem 1rem; }
             .cta-section h2 { font-size: clamp(1.3rem, 5vw, 1.8rem); }
             footer { padding: 2rem 1rem; }
